@@ -31,8 +31,8 @@ export default function Home() {
             <div className="relative mx-auto aspect-square w-full max-w-[500px] lg:max-w-none">
               <div className="absolute -inset-4 rounded-3xl bg-primary/10 blur-2xl" />
               <Image
-                src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1000"
-                alt="Professional woman in a modern workspace"
+                src="https://lagosmums.com/wp-content/uploads/2019/10/Yetty-Williams-Google-LagosMums2019.jpg"
+                alt="Yetty Williams - Slay With Digital Consulting"
                 fill
                 className="rounded-3xl object-cover shadow-2xl"
                 priority
@@ -138,12 +138,55 @@ export default function Home() {
                     &quot;{review.text}&quot;
                   </p>
                   <div>
-                    <p className="font-bold text-foreground">{review.author}</p>
-                    {review.role && <p className="text-sm text-muted-foreground">{review.role}</p>}
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src="https://enterprisenation.blob.core.windows.net/enterprisenation/production/profile/f9e99b43-35f6-ed11-8848-6045bdd2c7db/profile.png"
+                        alt="Yetty Williams"
+                        width={48}
+                        height={48}
+                        className="rounded-full bg-muted object-cover"
+                      />
+                      <div>
+                        <p className="font-bold text-foreground">{review.author}</p>
+                        {review.role && <p className="text-sm text-muted-foreground">{review.role}</p>}
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Book */}
+      <section className="border-t border-border/50 py-24 bg-background">
+        <div className="container mx-auto max-w-7xl px-4 md:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center rounded-3xl bg-muted/30 p-8 md:p-12 border border-border/50">
+            <div className="space-y-6">
+              <div className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                Latest Book Release
+              </div>
+              <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                Digital Savvy Parenting: What the World Urgently Needs
+              </h2>
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                A research-backed framework for raising responsible digital citizens in today&apos;s fast-paced, screen-first world. Learn how to navigate the digital age with confidence.
+              </p>
+              <div className="pt-2">
+                <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90">
+                  <a href="https://selar.co" target="_blank" rel="noopener noreferrer">Get Your Copy</a>
+                </Button>
+              </div>
+            </div>
+            <div className="relative mx-auto w-full max-w-[350px] aspect-[3/4]">
+              <Image
+                src="https://images.groovetech.io/EdIpdbs9J2BbI8egXWaNS2Bts3dZGZfzpIXH8yE35YI/rs:fit:0:0:0/g:no/aHR0cHM6Ly9ncm9vdmV0ZWNoLmlvL3VwbG9hZHMvMTczMzMxMjk0NjAyNC0tLURTUF9Nb2NrdXBfMS5wbmc.png"
+                alt="Digital Savvy Parenting Book Mockup"
+                fill
+                className="object-contain drop-shadow-2xl hover:-translate-y-2 transition-transform duration-500"
+              />
+            </div>
           </div>
         </div>
       </section>

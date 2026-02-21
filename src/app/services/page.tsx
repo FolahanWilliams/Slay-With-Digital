@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Zap, CalendarRange, Building2, Mic, Compass, ShieldCheck, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -28,7 +29,8 @@ const services = [
     {
         title: "Speaking & Corporate Training",
         icon: Mic,
-        description: "Engaging keynote presentations and corporate workshops on digital marketing strategy, work-life balance, digital citizenship, and leveraging technology for business growth. Perfect for conferences, company retreats, and professional development days. Contact us to discuss your event."
+        description: "Engaging keynote presentations and corporate workshops on digital marketing strategy, work-life balance, digital citizenship, and leveraging technology for business growth. Perfect for conferences, company retreats, and professional development days. Contact us to discuss your event.",
+        image: "http://emotionalwell-being.org/wp-content/uploads/2018/07/YETTY-WILLIAMS-e1532435250512.png"
     },
     {
         title: "Life & Executive Coaching",
@@ -38,7 +40,8 @@ const services = [
     {
         title: "Digital Parenting Coaching & Workshops",
         icon: ShieldCheck,
-        description: "Expert coaching for parents, schools, and organisations navigating the digital world. Author of 'Digital Savvy Parenting: What the World Urgently Needs' — a research-backed framework for raising responsible digital citizens. Available for individual coaching, school workshops, and conference speaking."
+        description: "Expert coaching for parents, schools, and organisations navigating the digital world. Author of 'Digital Savvy Parenting: What the World Urgently Needs' — a research-backed framework for raising responsible digital citizens. Available for individual coaching, school workshops, and conference speaking.",
+        image: "https://images.groovetech.io/DaHbIY1I-_u0qHvm7whVNPihNNkaG7ZHam1QgWUx8d8/rs:fit:0:0:0/g:no/aHR0cHM6Ly9ncm9vdmV0ZWNoLmlvL3VwbG9hZHMvMTcxMDQwODA2NDgxMy0tLUhlYWRzaG90X1lldHR5V2lsbGlhbXMucG5n.png"
     }
 ];
 
@@ -61,8 +64,12 @@ export default function ServicesPage() {
                         return (
                             <Card key={index} className="flex flex-col justify-between border-border/40 shadow-sm transition-shadow hover:shadow-md">
                                 <CardHeader>
-                                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                                        <Icon className="h-7 w-7" />
+                                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary overflow-hidden">
+                                        {service.image ? (
+                                            <Image src={service.image} alt={service.title} width={56} height={56} className="object-cover h-full w-full" />
+                                        ) : (
+                                            <Icon className="h-7 w-7" />
+                                        )}
                                     </div>
                                     <CardTitle className="font-heading text-xl leading-tight">
                                         {service.title}

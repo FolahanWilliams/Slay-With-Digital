@@ -17,10 +17,10 @@ export default function AboutPage() {
                     <div className="relative aspect-[4/5] w-full max-w-md mx-auto lg:max-w-none">
                         <div className="absolute -inset-4 rounded-3xl bg-primary/10 blur-2xl" />
                         <Image
-                            src="https://images.unsplash.com/photo-1556761175-5973dd0f32d7?auto=format&fit=crop&q=80&w=1000"
-                            alt="Strategic coaching session"
+                            src="https://lagosmums.com/wp-content/uploads/2019/10/Yetty-Williams-Google-LagosMums2019.jpg"
+                            alt="Yetty Williams - Founder"
                             fill
-                            className="rounded-3xl object-cover shadow-2xl"
+                            className="rounded-3xl object-cover shadow-2xl origin-top"
                             priority
                         />
                     </div>
