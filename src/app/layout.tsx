@@ -17,8 +17,9 @@ import { Footer } from "@/components/layout/Footer";
 import { ConditionalChrome } from "@/components/layout/ConditionalChrome";
 
 export const metadata: Metadata = {
-  title: "Slay With Digital Consulting | Digital Media Marketing Strategy & Coaching",
-  description: "Expert digital media marketing consulting by Yetty Williams, Yale MBA. Grow your business with the proven 7C's framework. Based in London, serving clients globally.",
+  title: "Sav — A non-judgemental third parent, in your pocket",
+  description:
+    "Join the Sav waitlist. A personalized parenting coach for the AI era — brought to you by Yetty Williams, founder of LagosMums.",
 };
 
 export default function RootLayout({
@@ -28,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} antialiased font-sans flex flex-col min-h-screen bg-background text-foreground`}>
+      <body className={`${inter.variable} ${playfair.variable} antialiased font-sans flex flex-col min-h-screen bg-[#FBF7F2] text-neutral-900`}>
         <ConditionalChrome navigation={<Navigation />} footer={<Footer />}>
           {children}
         </ConditionalChrome>
