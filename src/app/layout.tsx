@@ -14,6 +14,7 @@ const playfair = Playfair_Display({
 
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import { ConditionalChrome } from "@/components/layout/ConditionalChrome";
 
 export const metadata: Metadata = {
   title: "Slay With Digital Consulting | Digital Media Marketing Strategy & Coaching",
@@ -28,11 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} antialiased font-sans flex flex-col min-h-screen bg-background text-foreground`}>
-        <Navigation />
-        <main className="flex-grow">
+        <ConditionalChrome navigation={<Navigation />} footer={<Footer />}>
           {children}
-        </main>
-        <Footer />
+        </ConditionalChrome>
       </body>
     </html>
   );
