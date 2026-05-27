@@ -400,7 +400,7 @@ function BookCallout() {
             <div className="mx-auto grid max-w-5xl items-center gap-12 rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:grid-cols-2 md:p-12">
                 <div className="relative mx-auto aspect-[3/4] w-full max-w-[280px]">
                     <Image
-                        src="/book-cover.png"
+                        src="/bk.png"
                         alt="Digital Savvy Parenting book by Yetty Williams"
                         fill
                         className="object-contain drop-shadow-2xl transition-transform duration-500 hover:-translate-y-2"
