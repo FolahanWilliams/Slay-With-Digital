@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function SavLayout({ children }: { children: React.ReactNode }) {
-    return <div className="min-h-screen bg-white text-neutral-900">{children}</div>;
+    return <div className="min-h-screen bg-[#FBF7F2] text-neutral-900">{children}</div>;
 }
