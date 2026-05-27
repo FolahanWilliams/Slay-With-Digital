@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sav — Waitlist Landing Page
 
-## Getting Started
+A non-judgemental parenting coach for the AI era. This repo is the marketing
+landing page where parents join the early waitlist.
 
-First, run the development server:
+> Built for Yetty Williams (founder of [LagosMums](https://lagosmums.com)) so
+> she can route traffic from her existing sites into a focused signup flow.
+
+## What's in here
+
+- **Next.js 16 (App Router) + Tailwind CSS 4** — the whole site is one page
+- **`src/app/page.tsx`** — every section lives here (hero, phone mockup,
+  benefits, "Meet Yetty", testimonials, book callout, closing CTA)
+- **`src/app/actions.ts`** — the server action that handles waitlist
+  submissions; validated with zod, ready to insert into Supabase
+- **`src/lib/config.ts`** — single source of truth for the WhatsApp link,
+  LagosMums URL, site URL, and other swappable values
+- **`supabase/sav_waitlist.sql`** — the database schema for storing signups
+- **`public/`** — images: `bk.png` (book cover), `yetty.jpg` (portrait)
+
+The OpenGraph share image, favicon, sitemap, and robots.txt are all
+generated dynamically by Next.js — no manual maintenance.
+
+## Going live — the three steps
+
+### 1. Replace the WhatsApp link
+
+Open `.env.example`, copy it to `.env.local`, and set `NEXT_PUBLIC_WHATSAPP_URL`
+to your real wa.me link. In Vercel, add the same as a Production environment
+variable.
+
+### 2. Wire up Supabase
+
+a. Create a project at [supabase.com](https://supabase.com).
+
+b. Open the SQL Editor and run the contents of `supabase/sav_waitlist.sql` —
+   it creates the `sav_waitlist` table with a unique email index and RLS
+   enabled.
+
+c. Project Settings → API → copy the **URL** and the **service_role** key
+   (the long one, not the anon key). Set them as `SUPABASE_URL` and
+   `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` (locally) and in Vercel's
+   environment variables (production).
+
+d. In `src/app/actions.ts`, find the `// ─── Supabase hookup goes here ───`
+   block and uncomment the lines below it. The block is annotated so it's
+   clear which lines to enable.
+
+e. Run `npm install @supabase/supabase-js` to add the client library.
+
+### 3. Deploy
+
+Push to GitHub. Vercel auto-deploys. That's it.
+
+## Local development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run build        # production build
+npm run start        # serve the production build
+npm run lint         # ESLint
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Swapping content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Want to change a headline, link, or testimonial? Almost everything is
+plain JSX in `src/app/page.tsx`. The most common swaps:
 
-## Learn More
+| Change | File | What to look for |
+| --- | --- | --- |
+| WhatsApp link | `.env.local` | `NEXT_PUBLIC_WHATSAPP_URL` |
+| Site URL (OG previews) | `.env.local` | `NEXT_PUBLIC_SITE_URL` |
+| Headline copy | `src/app/page.tsx` | `function Hero()` |
+| Benefits cards | `src/app/page.tsx` | `function Benefits()` |
+| Testimonials | `src/app/page.tsx` | `function Testimonials()` |
+| Book cover image | `public/bk.png` | drop a new PNG with the same name |
+| Yetty's portrait | `public/yetty.jpg` | drop a new JPG with the same name |
+| Brand name / tagline | `src/lib/config.ts` | the `brand` block |
 
-To learn more about Next.js, take a look at the following resources:
+## Working with Claude Code
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If you're using Claude Code, open this repo and ask:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- *"Wire up Supabase using the SQL file"* — it'll do the install + edit.
+- *"Add a new testimonial from Adaeze who's a mum of three"* — it'll edit
+  the testimonials array.
+- *"Change the headline to X"* — straightforward.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+There's a `CLAUDE.md` in the root with project context Claude reads first.
