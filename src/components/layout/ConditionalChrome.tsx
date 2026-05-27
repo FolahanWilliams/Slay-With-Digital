@@ -12,7 +12,9 @@ export function ConditionalChrome({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
-    const hideChrome = pathname?.startsWith("/sav");
+    // Sav landing owns its own chrome — only the legacy /about, /services,
+    // /contact pages keep the Slay With Digital nav/footer.
+    const hideChrome = pathname === "/";
 
     return (
         <>
