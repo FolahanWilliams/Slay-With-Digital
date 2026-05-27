@@ -1,21 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "lagosmums.com" },
-      { protocol: "https", hostname: "enterprisenation.blob.core.windows.net" },
-      { protocol: "http", hostname: "emotionalwell-being.org" },
-      { protocol: "https", hostname: "images.groovetech.io" },
-      { protocol: "https", hostname: "media.licdn.com" },
-      { protocol: "https", hostname: "images.unsplash.com" },
-    ],
-  },
-  async redirects() {
-    return [
-      { source: "/sav", destination: "/", permanent: true },
-    ];
-  },
+    // /sav was the original route — keep redirecting it to / so any links
+    // shared during the early waitlist still resolve.
+    async redirects() {
+        return [{ source: "/sav", destination: "/", permanent: true }];
+    },
 };
 
 export default nextConfig;

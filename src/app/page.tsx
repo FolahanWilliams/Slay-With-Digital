@@ -4,9 +4,7 @@ import Image from "next/image";
 import { useActionState, useState, useTransition } from "react";
 import { ArrowRight, Plus, X, MessageCircle, Heart, Clock, Shield, Star } from "lucide-react";
 import { joinWaitlist, type WaitlistFormState } from "./actions";
-
-const WHATSAPP_LINK = "https://wa.me/PLACEHOLDER"; // TODO: swap with real wa.me link
-const LAGOSMUMS_LINK = "https://lagosmums.com";
+import { config } from "@/lib/config";
 
 const initialState: WaitlistFormState = { status: "idle" };
 
@@ -403,6 +401,7 @@ function BookCallout() {
                         src="/bk.png"
                         alt="Digital Savvy Parenting book by Yetty Williams"
                         fill
+                        sizes="(min-width: 768px) 280px, 60vw"
                         className="object-contain drop-shadow-2xl transition-transform duration-500 hover:-translate-y-2"
                     />
                 </div>
@@ -419,7 +418,7 @@ function BookCallout() {
                         behind Sav, in book form.
                     </p>
                     <a
-                        href="https://selar.co"
+                        href={config.bookUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
@@ -439,9 +438,10 @@ function MeetYetty() {
             <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-[1fr_1.4fr]">
                 <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-3xl bg-neutral-100 shadow-lg">
                     <Image
-                        src="https://lagosmums.com/wp-content/uploads/2019/10/Yetty-Williams-Google-LagosMums2019.jpg"
+                        src="/yetty.jpg"
                         alt="Yetty Williams, founder of LagosMums"
                         fill
+                        sizes="(min-width: 768px) 320px, 80vw"
                         className="object-cover"
                     />
                 </div>
@@ -497,7 +497,7 @@ function SiteFooter() {
             <p className="text-sm text-neutral-500">
                 Brought to you by{" "}
                 <a
-                    href={LAGOSMUMS_LINK}
+                    href={config.lagosMumsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-neutral-900 underline-offset-4 hover:underline"
@@ -506,7 +506,7 @@ function SiteFooter() {
                 </a>
                 , founder of{" "}
                 <a
-                    href={LAGOSMUMS_LINK}
+                    href={config.lagosMumsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-neutral-900 underline-offset-4 hover:underline"
@@ -536,7 +536,7 @@ function SuccessState() {
                 chat with us directly and help shape what Sav becomes.
             </p>
             <a
-                href={WHATSAPP_LINK}
+                href={config.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-10 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
