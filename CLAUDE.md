@@ -38,6 +38,26 @@ CTA so Yetty can talk to the first cohort directly.
 - `next.config.ts` sets security headers (CSP, HSTS, X-Frame-Options,
   etc.), disables `x-powered-by`, redirects `/sav` → `/` and
   `/favicon.ico` → `/icon`
+- Analytics: Vercel Web Analytics (`<Analytics/>` in `layout.tsx`) for
+  pageviews, plus a funnel of our own — `src/lib/track.ts` fires
+  `page_view`/`modal_opened`/`step_completed`/`signup_completed` to
+  `POST /api/track`, stored in the `sav_events` Supabase table.
+- Abuse hardening: `/api/waitlist` and `/api/track` enforce content-type
+  + body-size checks and a Postgres fixed-window rate limit
+  (`check_rate_limit` RPC, `sav_rate_limit` table) via `src/lib/rate-limit.ts`.
+- Email (best-effort, **setup unfinished — see TODO below**): on a
+  successful signup, `src/lib/email.ts` sends a welcome email to the
+  signup + an optional notification to the team via Resend. No-op until
+  `RESEND_API_KEY` + `EMAIL_FROM` are set, so signups work without it.
+- New Supabase objects need their SQL applied: migrations `0002` (phone +
+  referral) and `0003` (events + rate limiter) under `supabase/migrations/`.
+
+## TODO
+
+- **Finish Resend email setup**: create a Resend account, verify the
+  sending domain, set `RESEND_API_KEY`, `EMAIL_FROM` (and optionally
+  `WAITLIST_NOTIFY_TO`) locally and in Vercel. Code is wired in
+  `src/lib/email.ts`; it's a no-op until these env vars exist.
 
 ## Supabase
 

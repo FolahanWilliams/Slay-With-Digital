@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { config } from "@/lib/config";
 import "./globals.css";
 
@@ -91,6 +92,7 @@ export default function RootLayout({
                 className={`${inter.variable} ${playfair.variable} antialiased font-sans flex flex-col min-h-screen bg-[#FBF7F2] text-neutral-900`}
             >
                 <main className="flex-grow">{children}</main>
+                <Analytics />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

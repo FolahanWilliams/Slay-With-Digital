@@ -33,6 +33,11 @@ export const config = {
     // 1:1 chat with Yetty's number. Set NEXT_PUBLIC_WHATSAPP_URL to either a
     // full wa.me link or just the phone number — both work.
     whatsappUrl: whatsappLink(process.env.NEXT_PUBLIC_WHATSAPP_URL),
+    // Prefilled into the WhatsApp chat so the conversation starts itself.
+    // Set NEXT_PUBLIC_WHATSAPP_MESSAGE to override.
+    whatsappMessage:
+        process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE ??
+        "Hi Sav! I just joined the waitlist 💛",
     lagosMumsUrl: "https://lagosmums.com",
     yettyWilliamsUrl: "https://yettywilliams.com",
     bookUrl: "https://digitalsavvyparenting.com/digital-savvy-parenting-book",
@@ -41,3 +46,14 @@ export const config = {
         title: "Founder, LagosMums",
     },
 } as const;
+
+/**
+ * The WhatsApp link with the prefilled message appended, so tapping it opens
+ * a chat that's ready to send. Falls back to the bare link if there's no message.
+ */
+export function whatsappHref(): string {
+    const base = config.whatsappUrl;
+    if (!config.whatsappMessage) return base;
+    const sep = base.includes("?") ? "&" : "?";
+    return `${base}${sep}text=${encodeURIComponent(config.whatsappMessage)}`;
+}
