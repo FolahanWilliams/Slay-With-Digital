@@ -4,11 +4,12 @@
 -- action in src/app/actions.ts inserts signups through the service role.
 
 create table if not exists public.sav_waitlist (
-    id            uuid primary key default gen_random_uuid(),
-    email         text not null,
-    children_ages text[] not null default '{}',
-    ai_concern    text,
-    created_at    timestamptz not null default now()
+    id              uuid primary key default gen_random_uuid(),
+    email           text not null,
+    phone           text,
+    children_ages   text[] not null default '{}',
+    referral_source text,
+    created_at      timestamptz not null default now()
 );
 
 -- Each email can only join once (the action treats the resulting unique

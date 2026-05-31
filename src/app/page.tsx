@@ -2,71 +2,73 @@
 
 import Image from "next/image";
 import { useActionState, useState, useTransition } from "react";
-import { ArrowRight, Plus, X, MessageCircle, Heart, Clock, Shield, Star } from "lucide-react";
+import {
+    ArrowRight,
+    ArrowLeft,
+    Plus,
+    X,
+    Check,
+    MessageCircle,
+    Heart,
+    Clock,
+    Shield,
+    Star,
+} from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
 import { joinWaitlist, type WaitlistFormState } from "./actions";
 import { config } from "@/lib/config";
+import { cn } from "@/lib/utils";
 
 const initialState: WaitlistFormState = { status: "idle" };
 
 export default function SavLandingPage() {
+    const [joinOpen, setJoinOpen] = useState(false);
+    const [joinKey, setJoinKey] = useState(0);
+
+    const openJoin = () => {
+        setJoinKey((k) => k + 1);
+        setJoinOpen(true);
+    };
+
     return (
         <div className="flex min-h-screen flex-col">
-            <TopBar />
-            <Hero />
+            <TopBar onJoin={openJoin} />
+            <Hero onJoin={openJoin} />
             <CredibilityBar />
             <Benefits />
             <MeetYetty />
             <Testimonials />
             <BookCallout />
-            <ClosingCta />
+            <ClosingCta onJoin={openJoin} />
             <SiteFooter />
+            <WaitlistDialog key={joinKey} open={joinOpen} onOpenChange={setJoinOpen} />
         </div>
     );
 }
 
-function TopBar() {
+function TopBar({ onJoin }: { onJoin: () => void }) {
     return (
         <header className="flex items-center justify-between px-6 py-6 md:px-12 md:py-8">
             <span className="font-heading text-2xl tracking-tight text-neutral-900 md:text-3xl">
                 Sav
             </span>
-            <a
-                href="#join"
+            <button
+                type="button"
+                onClick={onJoin}
                 className="rounded-full bg-neutral-900 px-5 py-2 text-xs font-medium text-white transition-opacity hover:opacity-90 md:text-sm"
             >
                 Join the waitlist
-            </a>
+            </button>
         </header>
     );
 }
 
-function Hero() {
-    const [state, formAction] = useActionState(joinWaitlist, initialState);
-    const [pending, startTransition] = useTransition();
-    const [showOptional, setShowOptional] = useState(false);
-    const [childAges, setChildAges] = useState<string[]>([""]);
-
-    const onSubmit = (formData: FormData) => {
-        startTransition(() => formAction(formData));
-    };
-
-    const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
-    const removeChild = (idx: number) =>
-        setChildAges((c) => (c.length === 1 ? c : c.filter((_, i) => i !== idx)));
-    const updateChild = (idx: number, value: string) =>
-        setChildAges((c) => c.map((v, i) => (i === idx ? value : v)));
-
-    if (state.status === "success") {
-        return (
-            <section id="join" className="px-6 py-20 md:px-12 md:py-28">
-                <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-                    <SuccessState />
-                    <PhoneMockup />
-                </div>
-            </section>
-        );
-    }
-
+function Hero({ onJoin }: { onJoin: () => void }) {
     return (
         <section id="join" className="px-6 pb-20 pt-4 md:px-12 md:pb-28 md:pt-8">
             <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
@@ -85,106 +87,14 @@ function Hero() {
                         whenever you need one — at 3am, on the school run, or mid-meltdown.
                     </p>
 
-                    <form action={onSubmit} className="mt-10 space-y-5">
-                        <div>
-                            <div className="flex items-center gap-2 rounded-full border border-neutral-300 bg-white pl-5 pr-1 py-1 shadow-sm focus-within:border-neutral-900">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    required
-                                    placeholder="you@email.com"
-                                    aria-label="Email address"
-                                    className="flex-1 bg-transparent py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 outline-none"
-                                />
-                                <button
-                                    type="submit"
-                                    disabled={pending}
-                                    aria-label="Join the waitlist"
-                                    className="flex h-11 items-center gap-1.5 rounded-full bg-neutral-900 px-5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-                                >
-                                    Join
-                                    <ArrowRight className="h-4 w-4" />
-                                </button>
-                            </div>
-                            {state.fieldErrors?.email && (
-                                <p className="mt-2 pl-5 text-sm text-red-600">
-                                    {state.fieldErrors.email}
-                                </p>
-                            )}
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={() => setShowOptional((v) => !v)}
-                            className="text-sm text-neutral-500 underline-offset-4 transition-colors hover:text-neutral-900 hover:underline"
-                        >
-                            {showOptional ? "Hide optional questions" : "Tell us more (optional) →"}
-                        </button>
-
-                        {showOptional && (
-                            <div className="space-y-6 rounded-2xl border border-neutral-200 bg-white/60 p-6">
-                                <div>
-                                    <label className="mb-2 block text-sm font-medium text-neutral-900">
-                                        How old are your children?
-                                    </label>
-                                    <div className="space-y-2">
-                                        {childAges.map((age, idx) => (
-                                            <div key={idx} className="flex items-center gap-2">
-                                                <input
-                                                    type="text"
-                                                    name="childrenAges"
-                                                    value={age}
-                                                    onChange={(e) => updateChild(idx, e.target.value)}
-                                                    placeholder={`Child ${idx + 1} — e.g. 4 years`}
-                                                    className="flex-1 rounded-full border border-neutral-300 bg-white px-5 py-2 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                                />
-                                                {childAges.length > 1 && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeChild(idx)}
-                                                        aria-label="Remove child"
-                                                        className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
-                                                    >
-                                                        <X className="h-4 w-4" />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        ))}
-                                        {childAges.length < 10 && (
-                                            <button
-                                                type="button"
-                                                onClick={addChild}
-                                                className="inline-flex items-center gap-1.5 pl-5 pt-1 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
-                                            >
-                                                <Plus className="h-3.5 w-3.5" />
-                                                Add another child
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label
-                                        htmlFor="aiConcern"
-                                        className="mb-2 block text-sm font-medium text-neutral-900"
-                                    >
-                                        What&apos;s your biggest worry about AI and screen time?
-                                    </label>
-                                    <textarea
-                                        id="aiConcern"
-                                        name="aiConcern"
-                                        rows={4}
-                                        placeholder="No wrong answers. We&apos;re building this for you."
-                                        className="w-full resize-none rounded-2xl border border-neutral-300 bg-white px-5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {state.status === "error" && state.message && !state.fieldErrors?.email && (
-                            <p className="text-sm text-red-600">{state.message}</p>
-                        )}
-                    </form>
+                    <button
+                        type="button"
+                        onClick={onJoin}
+                        className="mt-10 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white shadow-sm transition-transform hover:scale-[1.02]"
+                    >
+                        Join the waitlist
+                        <ArrowRight className="h-4 w-4" />
+                    </button>
 
                     <p className="mt-6 text-xs text-neutral-500">
                         No spam. We&apos;ll only email when Sav is ready for you.
@@ -196,6 +106,306 @@ function Hero() {
                 </div>
             </div>
         </section>
+    );
+}
+
+const REFERRAL_OPTIONS = [
+    "Instagram",
+    "LagosMums",
+    "A friend or family",
+    "Google search",
+    "Facebook / X",
+    "Other",
+] as const;
+
+const TOTAL_STEPS = 4;
+
+function WaitlistDialog({
+    open,
+    onOpenChange,
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}) {
+    const [state, formAction] = useActionState(joinWaitlist, initialState);
+    const [pending, startTransition] = useTransition();
+    const [step, setStep] = useState(0);
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [childAges, setChildAges] = useState<string[]>([""]);
+    const [referral, setReferral] = useState("");
+    const [referralOther, setReferralOther] = useState("");
+    const [emailError, setEmailError] = useState<string | null>(null);
+
+    const isSuccess = state.status === "success";
+
+    const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
+    const removeChild = (idx: number) =>
+        setChildAges((c) => (c.length === 1 ? c : c.filter((_, i) => i !== idx)));
+    const updateChild = (idx: number, value: string) =>
+        setChildAges((c) => c.map((v, i) => (i === idx ? value : v)));
+
+    const validateEmail = () => {
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+        setEmailError(ok ? null : "Please enter a valid email.");
+        return ok;
+    };
+
+    const submit = () => {
+        const fd = new FormData();
+        fd.set("email", email);
+        fd.set("phone", phone);
+        childAges.forEach((a) => fd.append("childrenAges", a));
+        fd.set("referralSource", referral === "Other" ? referralOther : referral);
+        startTransition(() => formAction(fd));
+    };
+
+    const next = () => {
+        if (step === 0 && !validateEmail()) return;
+        if (step === TOTAL_STEPS - 1) {
+            submit();
+            return;
+        }
+        setStep((s) => s + 1);
+    };
+    const back = () => setStep((s) => Math.max(0, s - 1));
+
+    const onKeyDown = (e: React.KeyboardEvent) => {
+        const tag = (e.target as HTMLElement).tagName;
+        if (e.key === "Enter" && tag !== "TEXTAREA") {
+            e.preventDefault();
+            if (!pending) next();
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent
+                showCloseButton={!pending}
+                aria-describedby={undefined}
+                className="gap-0 overflow-hidden rounded-3xl border-neutral-200 bg-[#FBF7F2] p-0 sm:max-w-md"
+            >
+                {isSuccess ? (
+                    <div className="px-8 py-10 text-center">
+                        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                            <Check className="h-7 w-7" />
+                        </div>
+                        <DialogTitle className="font-heading text-3xl tracking-tight text-neutral-900">
+                            You&apos;re in.
+                        </DialogTitle>
+                        <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
+                            You&apos;re part of the first group. As a thank-you, hop into our
+                            WhatsApp to chat with us directly and help shape what Sav becomes.
+                        </p>
+                        <a
+                            href={config.whatsappUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-8 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                        >
+                            <MessageCircle className="h-4 w-4" />
+                            Chat with us on WhatsApp
+                        </a>
+                    </div>
+                ) : (
+                    <>
+                        <div className="h-1 w-full bg-neutral-200">
+                            <div
+                                className="h-full bg-amber-600 transition-all duration-300 ease-out"
+                                style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
+                            />
+                        </div>
+                        <div className="px-7 py-8" onKeyDown={onKeyDown}>
+                            <DialogTitle className="sr-only">Join the Sav waitlist</DialogTitle>
+                            <DialogDescription className="sr-only">
+                                A few quick questions so we can tailor Sav for you.
+                            </DialogDescription>
+                            <p className="text-xs font-medium uppercase tracking-[0.2em] text-amber-700">
+                                Step {step + 1} of {TOTAL_STEPS}
+                            </p>
+
+                            <div className="mt-4 min-h-[196px]">
+                                {step === 0 && (
+                                    <div>
+                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
+                                            What&apos;s your email?
+                                        </h2>
+                                        <p className="mt-1.5 text-sm text-neutral-500">
+                                            We&apos;ll only email when Sav is ready for you.
+                                        </p>
+                                        <input
+                                            type="email"
+                                            inputMode="email"
+                                            autoFocus
+                                            value={email}
+                                            onChange={(e) => {
+                                                setEmail(e.target.value);
+                                                if (emailError) setEmailError(null);
+                                            }}
+                                            placeholder="you@email.com"
+                                            className="mt-5 w-full rounded-full border border-neutral-300 bg-white px-5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                        />
+                                        {emailError && (
+                                            <p className="mt-2 pl-1 text-sm text-red-600">
+                                                {emailError}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+
+                                {step === 1 && (
+                                    <div>
+                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
+                                            Your phone number?
+                                        </h2>
+                                        <p className="mt-1.5 text-sm text-neutral-500">
+                                            Optional — early members get WhatsApp access to chat with
+                                            Yetty directly.
+                                        </p>
+                                        <input
+                                            type="tel"
+                                            inputMode="tel"
+                                            autoFocus
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            placeholder="+234 801 234 5678"
+                                            className="mt-5 w-full rounded-full border border-neutral-300 bg-white px-5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                        />
+                                    </div>
+                                )}
+
+                                {step === 2 && (
+                                    <div>
+                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
+                                            How old are your children?
+                                        </h2>
+                                        <p className="mt-1.5 text-sm text-neutral-500">
+                                            Optional — helps us tailor advice to their stage.
+                                        </p>
+                                        <div className="mt-5 space-y-2">
+                                            {childAges.map((age, idx) => (
+                                                <div key={idx} className="flex items-center gap-2">
+                                                    <input
+                                                        type="text"
+                                                        autoFocus={idx === 0}
+                                                        value={age}
+                                                        onChange={(e) => updateChild(idx, e.target.value)}
+                                                        placeholder={`Child ${idx + 1} — e.g. 4 years`}
+                                                        className="flex-1 rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                                    />
+                                                    {childAges.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeChild(idx)}
+                                                            aria-label="Remove child"
+                                                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                                                        >
+                                                            <X className="h-4 w-4" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            ))}
+                                            {childAges.length < 10 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={addChild}
+                                                    className="inline-flex items-center gap-1.5 pl-2 pt-1 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
+                                                >
+                                                    <Plus className="h-3.5 w-3.5" />
+                                                    Add another child
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {step === 3 && (
+                                    <div>
+                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
+                                            How did you hear about Sav?
+                                        </h2>
+                                        <p className="mt-1.5 text-sm text-neutral-500">
+                                            Optional — it helps us reach more parents like you.
+                                        </p>
+                                        <div className="mt-5 flex flex-wrap gap-2">
+                                            {REFERRAL_OPTIONS.map((opt) => (
+                                                <button
+                                                    type="button"
+                                                    key={opt}
+                                                    onClick={() => setReferral(opt)}
+                                                    className={cn(
+                                                        "rounded-full border px-4 py-2 text-sm transition-colors",
+                                                        referral === opt
+                                                            ? "border-amber-600 bg-amber-600 text-white"
+                                                            : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900",
+                                                    )}
+                                                >
+                                                    {opt}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {referral === "Other" && (
+                                            <input
+                                                type="text"
+                                                autoFocus
+                                                value={referralOther}
+                                                onChange={(e) => setReferralOther(e.target.value)}
+                                                placeholder="Where did you hear about us?"
+                                                className="mt-3 w-full rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {state.status === "error" && state.message && (
+                                <p className="mt-3 text-sm text-red-600">{state.message}</p>
+                            )}
+
+                            <div className="mt-7 flex items-center justify-between">
+                                {step > 0 ? (
+                                    <button
+                                        type="button"
+                                        onClick={back}
+                                        disabled={pending}
+                                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-neutral-500 transition-colors hover:text-neutral-900 disabled:opacity-50"
+                                    >
+                                        <ArrowLeft className="h-4 w-4" />
+                                        Back
+                                    </button>
+                                ) : (
+                                    <span />
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={next}
+                                    disabled={pending}
+                                    className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                                >
+                                    {step === TOTAL_STEPS - 1
+                                        ? pending
+                                            ? "Joining…"
+                                            : "Join the waitlist"
+                                        : "Continue"}
+                                    {!pending && <ArrowRight className="h-4 w-4" />}
+                                </button>
+                            </div>
+
+                            {step > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={next}
+                                    disabled={pending}
+                                    className="mt-4 block w-full text-center text-xs text-neutral-400 transition-colors hover:text-neutral-600 disabled:opacity-50"
+                                >
+                                    {step === TOTAL_STEPS - 1 ? "Skip & join" : "Skip this question"}
+                                </button>
+                            )}
+                        </div>
+                    </>
+                )}
+            </DialogContent>
+        </Dialog>
     );
 }
 
@@ -468,7 +678,7 @@ function MeetYetty() {
     );
 }
 
-function ClosingCta() {
+function ClosingCta({ onJoin }: { onJoin: () => void }) {
     return (
         <section className="px-6 pb-24 pt-4 md:px-12">
             <div className="mx-auto max-w-3xl rounded-3xl bg-neutral-900 px-8 py-16 text-center text-white md:px-12 md:py-20">
@@ -479,13 +689,14 @@ function ClosingCta() {
                     Early waitlist members get direct WhatsApp access to help shape what Sav
                     becomes.
                 </p>
-                <a
-                    href="#join"
+                <button
+                    type="button"
+                    onClick={onJoin}
                     className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-medium text-neutral-900 transition-transform hover:scale-[1.02]"
                 >
                     Join the waitlist
                     <ArrowRight className="h-4 w-4" />
-                </a>
+                </button>
             </div>
         </section>
     );
@@ -519,31 +730,3 @@ function SiteFooter() {
     );
 }
 
-function SuccessState() {
-    return (
-        <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-medium text-emerald-900">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                You&apos;re on the list
-            </div>
-            <h1 className="font-heading text-5xl leading-[1.02] tracking-tight text-neutral-900 sm:text-6xl md:text-7xl">
-                You&apos;re in.
-                <br />
-                <span className="italic text-amber-700">Welcome.</span>
-            </h1>
-            <p className="mt-7 max-w-md text-lg leading-relaxed text-neutral-700">
-                You&apos;re part of the first group. As a thank-you, hop into our WhatsApp to
-                chat with us directly and help shape what Sav becomes.
-            </p>
-            <a
-                href={config.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-10 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
-            >
-                Chat with us on WhatsApp
-                <ArrowRight className="h-4 w-4" />
-            </a>
-        </div>
-    );
-}
