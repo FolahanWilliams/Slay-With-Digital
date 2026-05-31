@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useState, useTransition } from "react";
+import { useState } from "react";
 import {
     ArrowRight,
     ArrowLeft,
@@ -20,9 +20,9 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog";
-import { joinWaitlist, type WaitlistFormState } from "./actions";
 import { config } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import type { WaitlistFormState } from "@/lib/waitlist";
 
 const initialState: WaitlistFormState = { status: "idle" };
 
@@ -127,14 +127,15 @@ function WaitlistDialog({
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }) {
-    const [state, formAction] = useActionState(joinWaitlist, initialState);
-    const [pending, startTransition] = useTransition();
+    const [state, setState] = useState<WaitlistFormState>(initialState);
+    const [pending, setPending] = useState(false);
     const [step, setStep] = useState(0);
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [childAges, setChildAges] = useState<string[]>([""]);
     const [referral, setReferral] = useState("");
     const [referralOther, setReferralOther] = useState("");
+    const [website, setWebsite] = useState("");
     const [emailError, setEmailError] = useState<string | null>(null);
 
     const isSuccess = state.status === "success";
@@ -151,19 +152,33 @@ function WaitlistDialog({
         return ok;
     };
 
-    const submit = () => {
-        const fd = new FormData();
-        fd.set("email", email);
-        fd.set("phone", phone);
-        childAges.forEach((a) => fd.append("childrenAges", a));
-        fd.set("referralSource", referral === "Other" ? referralOther : referral);
-        startTransition(() => formAction(fd));
+    const submit = async () => {
+        setPending(true);
+        try {
+            const res = await fetch("/api/waitlist", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email,
+                    phone,
+                    childrenAges: childAges,
+                    referralSource: referral === "Other" ? referralOther : referral,
+                    website,
+                }),
+            });
+            setState(await res.json());
+        } catch {
+            setState({ status: "error", message: "Something went wrong. Please try again." });
+        } finally {
+            setPending(false);
+        }
     };
 
     const next = () => {
+        if (pending) return;
         if (step === 0 && !validateEmail()) return;
         if (step === TOTAL_STEPS - 1) {
-            submit();
+            void submit();
             return;
         }
         setStep((s) => s + 1);
@@ -220,6 +235,16 @@ function WaitlistDialog({
                             <DialogDescription className="sr-only">
                                 A few quick questions so we can tailor Sav for you.
                             </DialogDescription>
+                            <input
+                                type="text"
+                                name="website"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                aria-hidden="true"
+                                value={website}
+                                onChange={(e) => setWebsite(e.target.value)}
+                                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                            />
                             <p className="text-xs font-medium uppercase tracking-[0.2em] text-amber-700">
                                 Step {step + 1} of {TOTAL_STEPS}
                             </p>

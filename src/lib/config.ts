@@ -28,14 +28,14 @@ export const config = {
     // Public URL where this site is deployed (used for canonical + sitemap + OG).
     // Set NEXT_PUBLIC_SITE_URL in production to override.
     siteUrl:
-        process.env.NEXT_PUBLIC_SITE_URL ?? "https://slay-with-digital.vercel.app",
+        process.env.NEXT_PUBLIC_SITE_URL ?? "https://sav-waitlist.vercel.app",
     // Post-signup WhatsApp link shown on the success state. Opens a direct
     // 1:1 chat with Yetty's number. Set NEXT_PUBLIC_WHATSAPP_URL to either a
     // full wa.me link or just the phone number — both work.
     whatsappUrl: whatsappLink(process.env.NEXT_PUBLIC_WHATSAPP_URL),
     lagosMumsUrl: "https://lagosmums.com",
     yettyWilliamsUrl: "https://yettywilliams.com",
-    bookUrl: "https://selar.co",
+    bookUrl: "https://digitalsavvyparenting.com/digital-savvy-parenting-book",
     founder: {
         name: "Yetty Williams",
         title: "Founder, LagosMums",

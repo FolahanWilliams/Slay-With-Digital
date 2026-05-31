@@ -11,8 +11,8 @@ landing page where parents join the early waitlist.
 - **Next.js 16 (App Router) + Tailwind CSS 4** — the whole site is one page
 - **`src/app/page.tsx`** — every section lives here (hero, phone mockup,
   benefits, "Meet Yetty", testimonials, book callout, closing CTA)
-- **`src/app/actions.ts`** — the server action that handles waitlist
-  submissions; validated with zod and inserted into Supabase
+- **`src/app/api/waitlist/route.ts`** — the API route that handles waitlist
+  submissions; validated with zod (`src/lib/waitlist.ts`) and inserted into Supabase
 - **`src/lib/supabase.ts`** — server-only Supabase client (service role)
 - **`src/lib/config.ts`** — single source of truth for the WhatsApp link,
   LagosMums URL, site URL, and other swappable values

@@ -36,15 +36,15 @@ CTA so Yetty can talk to the first cohort directly.
 
 ## Supabase
 
-Already wired (`@supabase/supabase-js` installed, action inserts on submit).
-To connect a database:
+Already wired (`@supabase/supabase-js` installed, the `/api/waitlist`
+route inserts on submit). To connect a database:
 
 1. Run `supabase/sav_waitlist.sql` in the Supabase SQL editor
 2. Set `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` env vars (locally in
    `.env.local`, in production via Vercel)
 
 `getSupabaseAdmin()` returns `null` when those vars are unset, and the
-action fails closed with a generic error rather than dropping signups.
+route fails closed with a generic error rather than dropping signups.
 
 ## Conventions
 
