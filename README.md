@@ -12,7 +12,8 @@ landing page where parents join the early waitlist.
 - **`src/app/page.tsx`** — every section lives here (hero, phone mockup,
   benefits, "Meet Yetty", testimonials, book callout, closing CTA)
 - **`src/app/actions.ts`** — the server action that handles waitlist
-  submissions; validated with zod, ready to insert into Supabase
+  submissions; validated with zod and inserted into Supabase
+- **`src/lib/supabase.ts`** — server-only Supabase client (service role)
 - **`src/lib/config.ts`** — single source of truth for the WhatsApp link,
   LagosMums URL, site URL, and other swappable values
 - **`supabase/sav_waitlist.sql`** — the database schema for storing signups
@@ -31,22 +32,20 @@ variable.
 
 ### 2. Wire up Supabase
 
-a. Create a project at [supabase.com](https://supabase.com).
+The code is already wired: `@supabase/supabase-js` is installed and
+`src/app/actions.ts` inserts each signup into the `sav_waitlist` table. You
+just need to point it at a database.
 
-b. Open the SQL Editor and run the contents of `supabase/sav_waitlist.sql` —
-   it creates the `sav_waitlist` table with a unique email index and RLS
-   enabled.
+a. Open the project's SQL Editor and run the contents of
+   `supabase/sav_waitlist.sql` — it creates the `sav_waitlist` table with a
+   unique email index and RLS enabled.
 
-c. Project Settings → API → copy the **URL** and the **service_role** key
+b. Project Settings → API → copy the **URL** and the **service_role** key
    (the long one, not the anon key). Set them as `SUPABASE_URL` and
    `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` (locally) and in Vercel's
-   environment variables (production).
-
-d. In `src/app/actions.ts`, find the `// ─── Supabase hookup goes here ───`
-   block and uncomment the lines below it. The block is annotated so it's
-   clear which lines to enable.
-
-e. Run `npm install @supabase/supabase-js` to add the client library.
+   environment variables (production). If `SUPABASE_URL` is unset the action
+   fails closed and the form shows a generic error rather than dropping data
+   silently.
 
 ### 3. Deploy
 

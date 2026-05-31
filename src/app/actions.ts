@@ -2,6 +2,8 @@
 
 import { z } from "zod";
 
+import { getSupabaseAdmin } from "@/lib/supabase";
+
 const waitlistSchema = z.object({
     email: z.string().trim().toLowerCase().email("Please enter a valid email."),
     childrenAges: z
@@ -47,20 +49,27 @@ export async function joinWaitlist(
         };
     }
 
-    // ─── Supabase hookup goes here ───────────────────────────────────────
-    // To wire this up later, install `@supabase/supabase-js`, set
-    // SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY env vars, run the SQL in
-    // supabase/sav_waitlist.sql, then replace this block with:
-    //
-    //   const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-    //   const { error } = await supabase.from("sav_waitlist").insert({
-    //     email: parsed.data.email,
-    //     children_ages: parsed.data.childrenAges,
-    //     ai_concern: parsed.data.aiConcern,
-    //   });
-    //   if (error) return { status: "error", message: "Something went wrong. Please try again." };
-    // ─────────────────────────────────────────────────────────────────────
-    console.log("[sav waitlist]", parsed.data);
+    const supabase = getSupabaseAdmin();
+    if (!supabase) {
+        console.error("[sav waitlist] Supabase env vars are not set; dropping signup.");
+        return { status: "error", message: "Something went wrong. Please try again." };
+    }
+
+    const { error } = await supabase.from("sav_waitlist").insert({
+        email: parsed.data.email,
+        children_ages: parsed.data.childrenAges,
+        ai_concern: parsed.data.aiConcern,
+    });
+
+    if (error) {
+        // 23505 = unique_violation: this email already joined. Treat as success
+        // so we don't leak who's on the list or punish a double-submit.
+        if (error.code === "23505") {
+            return { status: "success", message: "You're already on the list." };
+        }
+        console.error("[sav waitlist] insert failed:", error);
+        return { status: "error", message: "Something went wrong. Please try again." };
+    }
 
     return {
         status: "success",
