@@ -6,15 +6,21 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 
 const waitlistSchema = z.object({
     email: z.string().trim().toLowerCase().email("Please enter a valid email."),
+    phone: z
+        .string()
+        .trim()
+        .max(30)
+        .optional()
+        .transform((s) => (s && s.length > 0 ? s : null)),
     childrenAges: z
         .array(z.string().trim())
         .max(10)
         .optional()
         .transform((arr) => arr?.filter((a) => a.length > 0) ?? []),
-    aiConcern: z
+    referralSource: z
         .string()
         .trim()
-        .max(2000)
+        .max(200)
         .optional()
         .transform((s) => (s && s.length > 0 ? s : null)),
 });
@@ -22,7 +28,7 @@ const waitlistSchema = z.object({
 export type WaitlistFormState = {
     status: "idle" | "success" | "error";
     message?: string;
-    fieldErrors?: Partial<Record<"email" | "childrenAges" | "aiConcern", string>>;
+    fieldErrors?: Partial<Record<"email" | "phone" | "childrenAges" | "referralSource", string>>;
 };
 
 export async function joinWaitlist(
@@ -31,8 +37,9 @@ export async function joinWaitlist(
 ): Promise<WaitlistFormState> {
     const raw = {
         email: String(formData.get("email") ?? ""),
+        phone: String(formData.get("phone") ?? ""),
         childrenAges: formData.getAll("childrenAges").map(String),
-        aiConcern: String(formData.get("aiConcern") ?? ""),
+        referralSource: String(formData.get("referralSource") ?? ""),
     };
 
     const parsed = waitlistSchema.safeParse(raw);
@@ -57,8 +64,9 @@ export async function joinWaitlist(
 
     const { error } = await supabase.from("sav_waitlist").insert({
         email: parsed.data.email,
+        phone: parsed.data.phone,
         children_ages: parsed.data.childrenAges,
-        ai_concern: parsed.data.aiConcern,
+        referral_source: parsed.data.referralSource,
     });
 
     if (error) {
