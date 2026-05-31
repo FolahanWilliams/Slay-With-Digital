@@ -285,14 +285,24 @@ function WaitlistDialog({
                                         <div className="mt-5 space-y-2">
                                             {childAges.map((age, idx) => (
                                                 <div key={idx} className="flex items-center gap-2">
-                                                    <input
-                                                        type="text"
-                                                        autoFocus={idx === 0}
-                                                        value={age}
-                                                        onChange={(e) => updateChild(idx, e.target.value)}
-                                                        placeholder={`Child ${idx + 1} — e.g. 4 years`}
-                                                        className="flex-1 rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                                    />
+                                                    <div className="relative flex-1">
+                                                        <input
+                                                            type="number"
+                                                            inputMode="numeric"
+                                                            min={0}
+                                                            max={25}
+                                                            autoFocus={idx === 0}
+                                                            value={age}
+                                                            onChange={(e) =>
+                                                                updateChild(idx, e.target.value.replace(/\D/g, ""))
+                                                            }
+                                                            placeholder={`Child ${idx + 1}`}
+                                                            className="w-full rounded-full border border-neutral-300 bg-white px-5 py-2.5 pr-12 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                                        />
+                                                        <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
+                                                            yrs
+                                                        </span>
+                                                    </div>
                                                     {childAges.length > 1 && (
                                                         <button
                                                             type="button"
@@ -481,13 +491,18 @@ function CredibilityBar() {
     ];
     return (
         <section className="border-y border-neutral-200/70 bg-white/60 py-8">
-            <div className="mx-auto max-w-6xl px-6 md:px-12">
-                <p className="mb-5 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-neutral-500">
-                    The wisdom behind Sav
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-center text-xs font-semibold tracking-wider text-neutral-600 md:text-sm">
-                    {items.map((label) => (
-                        <span key={label}>{label}</span>
+            <p className="mb-6 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-neutral-500">
+                The wisdom behind Sav
+            </p>
+            <div className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+                <div className="flex w-max animate-marquee items-center group-hover:[animation-play-state:paused]">
+                    {[...items, ...items].map((label, i) => (
+                        <div key={i} className="flex items-center" aria-hidden={i >= items.length}>
+                            <span className="whitespace-nowrap text-xs font-semibold tracking-wider text-neutral-600 md:text-sm">
+                                {label}
+                            </span>
+                            <span className="mx-8 h-1 w-1 shrink-0 rounded-full bg-amber-400/70" />
+                        </div>
                     ))}
                 </div>
             </div>
