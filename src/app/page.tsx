@@ -194,8 +194,8 @@ function WaitlistDialog({
                             You&apos;re in.
                         </DialogTitle>
                         <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
-                            You&apos;re part of the first group. As a thank-you, hop into our
-                            WhatsApp to chat with us directly and help shape what Sav becomes.
+                            You&apos;re part of the first group. As a thank-you, message us
+                            directly on WhatsApp to chat one-on-one and help shape what Sav becomes.
                         </p>
                         <a
                             href={config.whatsappUrl}
@@ -486,11 +486,12 @@ function CredibilityBar() {
         "YALE SCHOOL OF MANAGEMENT MBA",
         "UNIVERSITY OF CAMBRIDGE",
         "FORMER GOOGLE BUSINESS MENTOR",
+        "FORBES 30 UNDER 50",
         "EMCC ACCREDITED COACH",
         "FEATURED IN THE GUARDIAN",
     ];
     return (
-        <section className="border-y border-neutral-200/70 bg-white/60 py-8">
+        <section className="border-y-2 border-neutral-300 bg-white/60 py-8">
             <p className="mb-6 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-neutral-500">
                 The wisdom behind Sav
             </p>

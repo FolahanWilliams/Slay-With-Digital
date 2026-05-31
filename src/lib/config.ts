@@ -4,6 +4,20 @@
  * updates — links in the header, hero, success state, footer, and SEO.
  */
 
+/**
+ * Accepts either a full WhatsApp link (https://wa.me/234… or chat.whatsapp.com/…)
+ * or a bare phone number ("+234 801 234 5678", "2348012345678") and always
+ * returns a tappable wa.me URL that opens a 1:1 chat with that number.
+ */
+function whatsappLink(value: string | undefined): string {
+    const fallback = "https://wa.me/PLACEHOLDER";
+    const trimmed = value?.trim();
+    if (!trimmed) return fallback;
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    const digits = trimmed.replace(/\D/g, "");
+    return digits ? `https://wa.me/${digits}` : fallback;
+}
+
 export const config = {
     brand: {
         name: "Sav",
@@ -15,10 +29,10 @@ export const config = {
     // Set NEXT_PUBLIC_SITE_URL in production to override.
     siteUrl:
         process.env.NEXT_PUBLIC_SITE_URL ?? "https://slay-with-digital.vercel.app",
-    // Post-signup WhatsApp link shown on the success state.
-    // Set NEXT_PUBLIC_WHATSAPP_URL to the real wa.me/<number> link.
-    whatsappUrl:
-        process.env.NEXT_PUBLIC_WHATSAPP_URL ?? "https://wa.me/PLACEHOLDER",
+    // Post-signup WhatsApp link shown on the success state. Opens a direct
+    // 1:1 chat with Yetty's number. Set NEXT_PUBLIC_WHATSAPP_URL to either a
+    // full wa.me link or just the phone number — both work.
+    whatsappUrl: whatsappLink(process.env.NEXT_PUBLIC_WHATSAPP_URL),
     lagosMumsUrl: "https://lagosmums.com",
     yettyWilliamsUrl: "https://yettywilliams.com",
     bookUrl: "https://selar.co",
