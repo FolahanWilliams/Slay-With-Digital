@@ -19,10 +19,13 @@ CTA so Yetty can talk to the first cohort directly.
   modal (email → phone → children's ages → how they heard about Sav)
   built on `src/components/ui/dialog.tsx`. It remounts on each open (via
   a `key`) so step/field state resets cleanly.
-- Server action in `src/app/actions.ts` validates submissions with zod
-  (fields: `email`, `phone`, `childrenAges`, `referralSource`) and
-  inserts them into the `sav_waitlist` table via the server-only client
-  in `src/lib/supabase.ts` (service role). Duplicate emails are caught
+- The modal posts JSON to the `POST /api/waitlist` route handler
+  (`src/app/api/waitlist/route.ts`). It's a stable endpoint (not a hashed
+  Server Action) so submissions survive redeploys. It validates with the
+  shared zod schema in `src/lib/waitlist.ts` (fields: `email`, `phone`,
+  `childrenAges`, `referralSource`; plus a `website` honeypot), then
+  inserts into the `sav_waitlist` table via the server-only client in
+  `src/lib/supabase.ts` (service role). Duplicate emails are caught
   (Postgres `23505`) and surfaced as a friendly success.
 - All swappable links/copy live in `src/lib/config.ts`. Env vars override:
   `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WHATSAPP_URL`
@@ -32,7 +35,9 @@ CTA so Yetty can talk to the first cohort directly.
   - `src/app/opengraph-image.tsx` — share preview (1200×630)
   - `src/app/twitter-image.tsx` — re-exports the OG image
   - `src/app/robots.ts`, `src/app/sitemap.ts`
-- `next.config.ts` permanently redirects `/sav` → `/` (historical route)
+- `next.config.ts` sets security headers (CSP, HSTS, X-Frame-Options,
+  etc.), disables `x-powered-by`, redirects `/sav` → `/` and
+  `/favicon.ico` → `/icon`
 
 ## Supabase
 

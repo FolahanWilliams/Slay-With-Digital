@@ -32,8 +32,8 @@ variable.
 
 ### 2. Wire up Supabase
 
-The code is already wired: `@supabase/supabase-js` is installed and
-`src/app/actions.ts` inserts each signup into the `sav_waitlist` table. You
+The code is already wired: `@supabase/supabase-js` is installed and the
+`/api/waitlist` route inserts each signup into the `sav_waitlist` table. You
 just need to point it at a database.
 
 a. Open the project's SQL Editor and run the contents of
