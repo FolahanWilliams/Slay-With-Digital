@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     ArrowRight,
     ArrowLeft,
@@ -20,8 +20,9 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog";
-import { config } from "@/lib/config";
+import { config, whatsappHref } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/track";
 import type { WaitlistFormState } from "@/lib/waitlist";
 
 const initialState: WaitlistFormState = { status: "idle" };
@@ -30,9 +31,14 @@ export default function SavLandingPage() {
     const [joinOpen, setJoinOpen] = useState(false);
     const [joinKey, setJoinKey] = useState(0);
 
+    useEffect(() => {
+        track("page_view");
+    }, []);
+
     const openJoin = () => {
         setJoinKey((k) => k + 1);
         setJoinOpen(true);
+        track("modal_opened");
     };
 
     return (
@@ -166,7 +172,13 @@ function WaitlistDialog({
                     website,
                 }),
             });
-            setState(await res.json());
+            const json = await res.json();
+            setState(json);
+            if (json?.status === "success") {
+                track("signup_completed", {
+                    referral: referral === "Other" ? referralOther : referral,
+                });
+            }
         } catch {
             setState({ status: "error", message: "Something went wrong. Please try again." });
         } finally {
@@ -177,6 +189,7 @@ function WaitlistDialog({
     const next = () => {
         if (pending) return;
         if (step === 0 && !validateEmail()) return;
+        track("step_completed", { step });
         if (step === TOTAL_STEPS - 1) {
             void submit();
             return;
@@ -213,7 +226,7 @@ function WaitlistDialog({
                             directly on WhatsApp to chat one-on-one and help shape what Sav becomes.
                         </p>
                         <a
-                            href={config.whatsappUrl}
+                            href={whatsappHref()}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-8 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
