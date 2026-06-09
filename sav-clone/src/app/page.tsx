@@ -679,7 +679,7 @@ function Testimonials() {
                             <p className="mb-6 flex-1 leading-relaxed text-neutral-700">
                                 &ldquo;{review.text}&rdquo;
                             </p>
-                            <p className="font-semibold text-neutral-900">{review.author}</p>
+                            <p className="text-center font-semibold text-neutral-900">{review.author}</p>
                         </div>
                     ))}
                 </div>
@@ -706,12 +706,12 @@ function MeetYetty() {
                 </h2>
                 <p className="mt-6 text-lg leading-relaxed text-neutral-700">
                     A certified digital parenting coach trained in cyberpsychology, and a Yale
-                    MBA. As founder of LagosMums, Yetty has reached millions of parents — from
+                    MBA. As founder of LagosMums, Yetty has reached millions of parents, from
                     Lagos to the world.
                 </p>
                 <p className="mt-4 text-lg leading-relaxed text-neutral-700">
-                    She built Sav for the hard moments of raising kids in the digital age —
-                    navigating screen time and AI — so you always have a calm, judgement-free
+                    She built Sav for the hard moments of raising kids in the digital age, like
+                    navigating screen time and AI. So you always have a calm, judgement-free
                     voice in your pocket, 24/7.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-2">
@@ -737,8 +737,8 @@ function ClosingCta({ onJoin }: { onJoin: () => void }) {
                     Be among the first to meet Sav.
                 </h2>
                 <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-neutral-300 md:text-lg">
-                    Sign up to get early access and get to personalize Sav for your family and
-                    help shape what it becomes.
+                    Get early access to personalize Sav for your family and help shape what it
+                    becomes.
                 </p>
                 <button
                     type="button"
