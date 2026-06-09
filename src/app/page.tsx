@@ -304,8 +304,8 @@ function WaitlistDialog({
                                 You&apos;re in.
                             </DialogTitle>
                             <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
-                                You&apos;re part of the first group. As a thank-you, message us
-                                directly on WhatsApp to chat one-on-one and help shape Sav.
+                                You&apos;re in the first group. Message us on WhatsApp to
+                                personalize Sav for your family and help shape what it becomes.
                             </p>
                             <a
                                 href={whatsappHref()}
@@ -526,81 +526,43 @@ function WaitlistDialog({
 
 function PhoneMockup() {
     return (
-        <div className="relative mx-auto w-full max-w-[500px]">
+        <div className="relative mx-auto w-full max-w-[340px]">
             <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-amber-100 via-rose-100 to-orange-100 blur-3xl opacity-70" />
-            <div className="relative flex flex-wrap items-start justify-center gap-4">
-                <PhoneCard>
-                    <Bubble side="user">
-                        Toddler refusing to brush teeth again 😩 it&apos;s 9pm
-                    </Bubble>
-                    <Bubble side="sav">
-                        Bedtime power struggles — classic. Two-year-olds need control, not
-                        commands.
-                    </Bubble>
-                    <Bubble side="sav">
-                        Try: <span className="font-medium">&ldquo;Blue brush or red brush?&rdquo;</span>{" "}
-                        Choice = compliance. Want a 30-second song too? 🎵
-                    </Bubble>
-                    <Bubble side="user">trying it now…</Bubble>
-                    <Bubble side="sav">I&apos;ll be here. You&apos;ve got this. 💛</Bubble>
-                </PhoneCard>
-
-                <PhoneCard className="sm:mt-12">
-                    <Bubble side="user">
-                        My 11yo melts down every time I say get off his video game 🎮
-                    </Bubble>
-                    <Bubble side="sav">
-                        Pulling him off mid-game feels like leaving a live football match in
-                        the middle to go do the dishes — it&apos;s the timing, not defiance.
-                    </Bubble>
-                    <Bubble side="sav">
-                        Give a runway, not &ldquo;off now&rdquo;: try{" "}
-                        <span className="font-medium">&ldquo;Come to the kitchen by 6pm&rdquo;</span>{" "}
-                        — or a 10-minute warning so he can finish.
-                    </Bubble>
-                    <Bubble side="user">that makes sense</Bubble>
-                    <Bubble side="sav">
-                        He keeps his word, you keep your calm — agree it before he starts next
-                        time. 💛
-                    </Bubble>
-                </PhoneCard>
-            </div>
-        </div>
-    );
-}
-
-function PhoneCard({
-    children,
-    className,
-}: {
-    children: React.ReactNode;
-    className?: string;
-}) {
-    return (
-        <div
-            className={cn(
-                "relative w-[220px] shrink-0 rounded-[2.5rem] border-[10px] border-neutral-900 bg-white shadow-2xl",
-                className,
-            )}
-        >
-            <div className="absolute left-1/2 top-0 z-10 h-5 w-24 -translate-x-1/2 rounded-b-2xl bg-neutral-900" />
-            <div className="overflow-hidden rounded-[1.75rem] bg-[#FBF7F2]">
-                <div className="flex items-center justify-between border-b border-neutral-200 px-4 pb-2.5 pt-7">
-                    <div className="flex items-center gap-2">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-rose-400 font-heading text-sm font-bold text-white">
-                            S
+            <div className="relative rounded-[2.5rem] border-[10px] border-neutral-900 bg-white shadow-2xl">
+                <div className="absolute left-1/2 top-0 z-10 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-neutral-900" />
+                <div className="overflow-hidden rounded-[1.75rem] bg-[#FBF7F2]">
+                    <div className="flex items-center justify-between border-b border-neutral-200 px-5 pb-3 pt-9">
+                        <div className="flex items-center gap-2.5">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-rose-400 font-heading text-base font-bold text-white">
+                                S
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold text-neutral-900">Sav</p>
+                                <p className="text-[10px] text-emerald-600">● online</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-semibold text-neutral-900">Sav</p>
-                            <p className="text-[10px] text-emerald-600">● online</p>
-                        </div>
+                        <MessageCircle className="h-4 w-4 text-neutral-400" />
                     </div>
-                    <MessageCircle className="h-4 w-4 text-neutral-400" />
-                </div>
-                <div className="space-y-2.5 px-3 py-4">{children}</div>
-                <div className="border-t border-neutral-200 px-3 py-2.5">
-                    <div className="flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1.5">
-                        <span className="text-[11px] text-neutral-400">Type a message…</span>
+                    <div className="space-y-3 px-4 py-5">
+                        <Bubble side="user">
+                            My 11yo melts down every time I say get off his video game 🎮
+                        </Bubble>
+                        <Bubble side="sav">
+                            Pulling him off mid-game feels like leaving a live football match in
+                            the middle to do the dishes — bad timing, not defiance.
+                        </Bubble>
+                        <Bubble side="sav">
+                            Give a runway, not &ldquo;off now&rdquo;: try{" "}
+                            <span className="font-medium">&ldquo;Come to the kitchen by 6pm&rdquo;</span>,
+                            or a 10-min warning so he can finish.
+                        </Bubble>
+                        <Bubble side="user">that makes sense</Bubble>
+                        <Bubble side="sav">He keeps his word, you keep your calm. 💛</Bubble>
+                    </div>
+                    <div className="border-t border-neutral-200 px-4 py-3">
+                        <div className="flex items-center gap-2 rounded-full bg-neutral-100 px-4 py-2">
+                            <span className="text-xs text-neutral-400">Type a message…</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -735,48 +697,34 @@ function Testimonials() {
 function MeetYetty() {
     const credentials = [
         "📚 Author, Digital Savvy Parenting",
-        "🎓 Yale MBA",
-        "🎓 University of Cambridge",
-        "🎤 Former Google Business Mentor",
         "🏆 Forbes 30 Under 50",
-        "✅ EMCC Accredited Coach",
-        "📰 Featured in The Guardian",
+        "🛡️ Trained in online safety & child safeguarding",
     ];
 
     return (
         <section className="px-6 py-20 md:px-12 md:py-24">
-            <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-[1fr_1.4fr]">
-                <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-3xl bg-neutral-100 shadow-lg">
-                    <Image
-                        src="/yetty.jpg"
-                        alt="Yetty Williams, founder of LagosMums"
-                        fill
-                        sizes="(min-width: 768px) 320px, 80vw"
-                        className="object-cover"
-                    />
-                </div>
-                <div>
-                    <p className="mb-3 text-xs font-medium uppercase tracking-widest text-amber-700">
-                        Meet your guide
-                    </p>
-                    <h2 className="font-heading text-3xl leading-tight tracking-tight text-neutral-900 md:text-4xl">
-                        Built by Yetty Williams, founder of LagosMums.
-                    </h2>
-                    <p className="mt-6 text-lg leading-relaxed text-neutral-700">
-                        For 15+ years, Yetty has helped hundreds of thousands of parents through
-                        LagosMums — Africa&apos;s largest parenting community. Sav is the
-                        distilled version of that wisdom: available to you, on demand.
-                    </p>
-                    <div className="mt-8 flex flex-wrap gap-2">
-                        {credentials.map((c) => (
-                            <span
-                                key={c}
-                                className="rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-sm text-neutral-600"
-                            >
-                                {c}
-                            </span>
-                        ))}
-                    </div>
+            <div className="mx-auto max-w-2xl text-center">
+                <p className="mb-3 text-xs font-medium uppercase tracking-widest text-amber-700">
+                    Meet your guide
+                </p>
+                <h2 className="font-heading text-3xl leading-tight tracking-tight text-neutral-900 md:text-4xl">
+                    Built by Yetty Williams
+                </h2>
+                <p className="mt-6 text-lg leading-relaxed text-neutral-700">
+                    A certified digital parenting coach trained in cyberpsychology, and a Yale
+                    MBA. For 10+ years, Yetty has reached millions of parents — starting in
+                    Lagos, now around the world. Sav turns that experience into your third
+                    parent: available 24/7.
+                </p>
+                <div className="mt-8 flex flex-wrap justify-center gap-2">
+                    {credentials.map((c) => (
+                        <span
+                            key={c}
+                            className="rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-sm text-neutral-600"
+                        >
+                            {c}
+                        </span>
+                    ))}
                 </div>
             </div>
         </section>
@@ -791,8 +739,8 @@ function ClosingCta({ onJoin }: { onJoin: () => void }) {
                     Be among the first to meet Sav.
                 </h2>
                 <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-neutral-300 md:text-lg">
-                    Early waitlist members get direct WhatsApp access to help shape what Sav
-                    becomes.
+                    Early members get WhatsApp access to personalize Sav for their family and
+                    help shape what it becomes.
                 </p>
                 <button
                     type="button"
