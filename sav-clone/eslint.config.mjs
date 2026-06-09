@@ -12,8 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // The standalone duplicate is its own project — lint it from inside sav-clone.
-    "sav-clone/**",
   ]),
 ]);
 
