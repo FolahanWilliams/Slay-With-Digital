@@ -557,6 +557,30 @@ function PhoneMockup() {
                         </Bubble>
                         <Bubble side="user">trying it now…</Bubble>
                         <Bubble side="sav">I&apos;ll be here. You&apos;ve got this. 💛</Bubble>
+
+                        <div className="flex justify-center py-1">
+                            <span className="rounded-full bg-neutral-200/70 px-2.5 py-0.5 text-[10px] font-medium text-neutral-500">
+                                Today
+                            </span>
+                        </div>
+
+                        <Bubble side="user">
+                            My 11yo melts down every time I say get off his game 🎮😤
+                        </Bubble>
+                        <Bubble side="sav">
+                            Pulling him mid-match feels like letting his team down — that&apos;s
+                            bad timing, not defiance.
+                        </Bubble>
+                        <Bubble side="sav">
+                            Give a runway, not &ldquo;off now&rdquo;:{" "}
+                            <span className="font-medium">&ldquo;Two more games, then we save and stop&rdquo;</span>{" "}
+                            — or a 10-minute warning. Predictable beats sudden.
+                        </Bubble>
+                        <Bubble side="user">so a heads-up instead of &ldquo;off now&rdquo;?</Bubble>
+                        <Bubble side="sav">
+                            Exactly — set it before he logs on. He keeps his word, you keep your
+                            calm. 💛
+                        </Bubble>
                     </div>
                     <div className="border-t border-neutral-200 px-4 py-3">
                         <div className="flex items-center gap-2 rounded-full bg-neutral-100 px-4 py-2">
