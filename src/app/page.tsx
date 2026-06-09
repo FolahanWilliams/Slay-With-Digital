@@ -640,17 +640,14 @@ function Testimonials() {
         {
             text: "My session with Yetty was insightful and thought-provoking. She helped me gain clarity on a cloudy area. She's so down-to-earth and so helpful.",
             author: "Ebuka",
-            role: "LagosMums community",
         },
         {
-            text: "If you need to stay relevant in this digital age, Yetty's guidance is by far the best. Practical tools and methods I could use immediately.",
-            author: "Workshop attendee",
-            role: "Parent of two",
+            text: "If you need to stay relevant in this digital age, Yetty's guidance is by far the best. She shared practical tools and methods I could use immediately.",
+            author: "Mum of two",
         },
         {
             text: "The most informative coaching I've attended in a long while. Yetty shares lots of personal experiences that every parent can relate to.",
-            author: "Workshop attendee",
-            role: "LagosMums member",
+            author: "Parents",
         },
     ];
 
@@ -682,10 +679,7 @@ function Testimonials() {
                             <p className="mb-6 flex-1 leading-relaxed text-neutral-700">
                                 &ldquo;{review.text}&rdquo;
                             </p>
-                            <div>
-                                <p className="font-semibold text-neutral-900">{review.author}</p>
-                                <p className="text-sm text-neutral-500">{review.role}</p>
-                            </div>
+                            <p className="font-semibold text-neutral-900">{review.author}</p>
                         </div>
                     ))}
                 </div>
@@ -712,9 +706,9 @@ function MeetYetty() {
                 </h2>
                 <p className="mt-6 text-lg leading-relaxed text-neutral-700">
                     A certified digital parenting coach trained in cyberpsychology, and a Yale
-                    MBA. For 10+ years, Yetty has reached millions of parents — starting in
-                    Lagos, now around the world. Sav turns that experience into your third
-                    parent: available 24/7.
+                    MBA. Yetty has reached millions of parents — from Lagos to the world. Sav
+                    distills that expertise into a third parent: calm, judgement-free, and
+                    available 24/7.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-2">
                     {credentials.map((c) => (
@@ -739,7 +733,7 @@ function ClosingCta({ onJoin }: { onJoin: () => void }) {
                     Be among the first to meet Sav.
                 </h2>
                 <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-neutral-300 md:text-lg">
-                    Early members get WhatsApp access to personalize Sav for their family and
+                    Sign up to get early access and get to personalize Sav for your family and
                     help shape what it becomes.
                 </p>
                 <button
