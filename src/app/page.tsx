@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
     ArrowRight,
-    ArrowLeft,
     Plus,
     X,
     Check,
@@ -25,17 +24,47 @@ import { cn } from "@/lib/utils";
 import { track } from "@/lib/track";
 import type { WaitlistFormState } from "@/lib/waitlist";
 
-const initialState: WaitlistFormState = { status: "idle" };
+const isValidEmail = (value: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+async function postWaitlist(
+    payload: Record<string, unknown>,
+): Promise<WaitlistFormState> {
+    const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    });
+    return (await res.json()) as WaitlistFormState;
+}
 
 export default function SavLandingPage() {
     const [joinOpen, setJoinOpen] = useState(false);
     const [joinKey, setJoinKey] = useState(0);
+    const [seedEmail, setSeedEmail] = useState("");
+    const [seedWebsite, setSeedWebsite] = useState("");
+    const [autoSubmit, setAutoSubmit] = useState(false);
 
     useEffect(() => {
         track("page_view");
     }, []);
 
+    // Plain CTA buttons open the modal on the email step.
     const openJoin = () => {
+        setSeedEmail("");
+        setSeedWebsite("");
+        setAutoSubmit(false);
+        setJoinKey((k) => k + 1);
+        setJoinOpen(true);
+        track("modal_opened");
+    };
+
+    // The hero form already has the email — open the modal and submit it
+    // straight away so the signup is captured in a single move.
+    const openJoinWithEmail = (email: string, website: string) => {
+        setSeedEmail(email);
+        setSeedWebsite(website);
+        setAutoSubmit(true);
         setJoinKey((k) => k + 1);
         setJoinOpen(true);
         track("modal_opened");
@@ -44,15 +73,20 @@ export default function SavLandingPage() {
     return (
         <div className="flex min-h-screen flex-col">
             <TopBar onJoin={openJoin} />
-            <Hero onJoin={openJoin} />
-            <CredibilityBar />
+            <Hero onJoinWithEmail={openJoinWithEmail} />
             <Benefits />
             <MeetYetty />
             <Testimonials />
-            <BookCallout />
             <ClosingCta onJoin={openJoin} />
             <SiteFooter />
-            <WaitlistDialog key={joinKey} open={joinOpen} onOpenChange={setJoinOpen} />
+            <WaitlistDialog
+                key={joinKey}
+                open={joinOpen}
+                onOpenChange={setJoinOpen}
+                initialEmail={seedEmail}
+                initialWebsite={seedWebsite}
+                autoSubmit={autoSubmit}
+            />
         </div>
     );
 }
@@ -74,7 +108,23 @@ function TopBar({ onJoin }: { onJoin: () => void }) {
     );
 }
 
-function Hero({ onJoin }: { onJoin: () => void }) {
+function Hero({
+    onJoinWithEmail,
+}: {
+    onJoinWithEmail: (email: string, website: string) => void;
+}) {
+    const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
+    const [error, setError] = useState<string | null>(null);
+
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const ok = isValidEmail(email);
+        setError(ok ? null : "Please enter a valid email.");
+        if (!ok) return;
+        onJoinWithEmail(email.trim(), website);
+    };
+
     return (
         <section id="join" className="px-6 pb-20 pt-4 md:px-12 md:pb-28 md:pt-8">
             <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
@@ -93,14 +143,42 @@ function Hero({ onJoin }: { onJoin: () => void }) {
                         whenever you need one — at 3am, on the school run, or mid-meltdown.
                     </p>
 
-                    <button
-                        type="button"
-                        onClick={onJoin}
-                        className="mt-10 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white shadow-sm transition-transform hover:scale-[1.02]"
-                    >
-                        Join the waitlist
-                        <ArrowRight className="h-4 w-4" />
-                    </button>
+                    <form onSubmit={onSubmit} className="mt-10 max-w-md">
+                        <input
+                            type="text"
+                            name="website"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            aria-hidden="true"
+                            value={website}
+                            onChange={(e) => setWebsite(e.target.value)}
+                            className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                        />
+                        <div className="flex flex-col gap-3 sm:flex-row">
+                            <input
+                                type="email"
+                                inputMode="email"
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    if (error) setError(null);
+                                }}
+                                placeholder="you@email.com"
+                                aria-label="Email address"
+                                className="flex-1 rounded-full border border-neutral-300 bg-white px-5 py-3.5 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                            />
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white shadow-sm transition-transform hover:scale-[1.02]"
+                            >
+                                Join the waitlist
+                                <ArrowRight className="h-4 w-4" />
+                            </button>
+                        </div>
+                        {error && (
+                            <p className="mt-2 pl-1 text-sm text-red-600">{error}</p>
+                        )}
+                    </form>
 
                     <p className="mt-6 text-xs text-neutral-500">
                         No spam. We&apos;ll only email when Sav is ready for you.
@@ -124,27 +202,33 @@ const REFERRAL_OPTIONS = [
     "Other",
 ] as const;
 
-const TOTAL_STEPS = 4;
-
 function WaitlistDialog({
     open,
     onOpenChange,
+    initialEmail,
+    initialWebsite,
+    autoSubmit,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    initialEmail: string;
+    initialWebsite: string;
+    autoSubmit: boolean;
 }) {
-    const [state, setState] = useState<WaitlistFormState>(initialState);
+    const [phase, setPhase] = useState<"email" | "done">("email");
+    const [email, setEmail] = useState(initialEmail);
+    const [website, setWebsite] = useState(initialWebsite);
     const [pending, setPending] = useState(false);
-    const [step, setStep] = useState(0);
-    const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    // Optional enrichment, collected after the email is already saved.
     const [phone, setPhone] = useState("");
     const [childAges, setChildAges] = useState<string[]>([""]);
     const [referral, setReferral] = useState("");
     const [referralOther, setReferralOther] = useState("");
-    const [website, setWebsite] = useState("");
-    const [emailError, setEmailError] = useState<string | null>(null);
-
-    const isSuccess = state.status === "success";
+    const [enrichPending, setEnrichPending] = useState(false);
+    const [enrichSaved, setEnrichSaved] = useState(false);
 
     const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
     const removeChild = (idx: number) =>
@@ -152,57 +236,54 @@ function WaitlistDialog({
     const updateChild = (idx: number, value: string) =>
         setChildAges((c) => c.map((v, i) => (i === idx ? value : v)));
 
-    const validateEmail = () => {
-        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-        setEmailError(ok ? null : "Please enter a valid email.");
-        return ok;
-    };
-
-    const submit = async () => {
+    const join = async (em: string) => {
         setPending(true);
+        setError(null);
         try {
-            const res = await fetch("/api/waitlist", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email,
-                    phone,
-                    childrenAges: childAges,
-                    referralSource: referral === "Other" ? referralOther : referral,
-                    website,
-                }),
-            });
-            const json = await res.json();
-            setState(json);
-            if (json?.status === "success") {
-                track("signup_completed", {
-                    referral: referral === "Other" ? referralOther : referral,
-                });
+            const json = await postWaitlist({ email: em, website });
+            if (json.status === "success") {
+                track("signup_completed");
+                setPhase("done");
+            } else {
+                setError(json.message ?? "Something went wrong. Please try again.");
             }
         } catch {
-            setState({ status: "error", message: "Something went wrong. Please try again." });
+            setError("Something went wrong. Please try again.");
         } finally {
             setPending(false);
         }
     };
 
-    const next = () => {
-        if (pending) return;
-        if (step === 0 && !validateEmail()) return;
-        track("step_completed", { step });
-        if (step === TOTAL_STEPS - 1) {
-            void submit();
-            return;
-        }
-        setStep((s) => s + 1);
-    };
-    const back = () => setStep((s) => Math.max(0, s - 1));
+    useEffect(() => {
+        if (autoSubmit && isValidEmail(initialEmail)) void join(initialEmail);
+        // Runs once on mount — the dialog remounts (via key) on every open.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const onKeyDown = (e: React.KeyboardEvent) => {
-        const tag = (e.target as HTMLElement).tagName;
-        if (e.key === "Enter" && tag !== "TEXTAREA") {
-            e.preventDefault();
-            if (!pending) next();
+    const submitEmail = () => {
+        if (pending) return;
+        const ok = isValidEmail(email);
+        setEmailError(ok ? null : "Please enter a valid email.");
+        if (!ok) return;
+        void join(email.trim());
+    };
+
+    const saveDetails = async () => {
+        if (enrichPending) return;
+        setEnrichPending(true);
+        try {
+            const json = await postWaitlist({
+                mode: "enrich",
+                email,
+                phone,
+                childrenAges: childAges,
+                referralSource: referral === "Other" ? referralOther : referral,
+            });
+            if (json.status === "success") setEnrichSaved(true);
+        } catch {
+            // Best-effort — the signup is already saved, so never block here.
+        } finally {
+            setEnrichPending(false);
         }
     };
 
@@ -211,43 +292,187 @@ function WaitlistDialog({
             <DialogContent
                 showCloseButton={!pending}
                 aria-describedby={undefined}
-                className="gap-0 overflow-hidden rounded-3xl border-neutral-200 bg-[#FBF7F2] p-0 sm:max-w-md"
+                className="max-h-[90vh] gap-0 overflow-y-auto rounded-3xl border-neutral-200 bg-[#FBF7F2] p-0 sm:max-w-md"
             >
-                {isSuccess ? (
-                    <div className="px-8 py-10 text-center">
-                        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                            <Check className="h-7 w-7" />
+                {phase === "done" ? (
+                    <div className="px-7 py-9">
+                        <div className="text-center">
+                            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                                <Check className="h-7 w-7" />
+                            </div>
+                            <DialogTitle className="font-heading text-3xl tracking-tight text-neutral-900">
+                                You&apos;re in.
+                            </DialogTitle>
+                            <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
+                                You&apos;re part of the first group. As a thank-you, message us
+                                directly on WhatsApp to chat one-on-one and help shape Sav.
+                            </p>
+                            <a
+                                href={whatsappHref()}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                            >
+                                <MessageCircle className="h-4 w-4" />
+                                Chat with us on WhatsApp
+                            </a>
                         </div>
-                        <DialogTitle className="font-heading text-3xl tracking-tight text-neutral-900">
-                            You&apos;re in.
-                        </DialogTitle>
-                        <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
-                            You&apos;re part of the first group. As a thank-you, message us
-                            directly on WhatsApp to chat one-on-one and help shape what Sav becomes.
-                        </p>
+
+                        <div className="my-7 h-px w-full bg-neutral-200" />
+
+                        {enrichSaved ? (
+                            <p className="flex items-center justify-center gap-2 text-sm text-neutral-600">
+                                <Check className="h-4 w-4 text-emerald-600" />
+                                Thanks — that helps us tailor Sav for you.
+                            </p>
+                        ) : (
+                            <div>
+                                <p className="text-sm font-medium text-neutral-900">
+                                    Help us tailor Sav{" "}
+                                    <span className="font-normal text-neutral-400">
+                                        (optional)
+                                    </span>
+                                </p>
+
+                                <label className="mt-4 block text-xs font-medium text-neutral-500">
+                                    Your phone number
+                                    <input
+                                        type="tel"
+                                        inputMode="tel"
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                        placeholder="+234 801 234 5678"
+                                        className="mt-1.5 w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-base font-normal text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                    />
+                                </label>
+
+                                <div className="mt-4 text-xs font-medium text-neutral-500">
+                                    Your children&apos;s ages
+                                    <div className="mt-1.5 space-y-2">
+                                        {childAges.map((age, idx) => (
+                                            <div key={idx} className="flex items-center gap-2">
+                                                <div className="relative flex-1">
+                                                    <input
+                                                        type="number"
+                                                        inputMode="numeric"
+                                                        min={0}
+                                                        max={25}
+                                                        value={age}
+                                                        onChange={(e) =>
+                                                            updateChild(
+                                                                idx,
+                                                                e.target.value.replace(/\D/g, ""),
+                                                            )
+                                                        }
+                                                        placeholder={`Child ${idx + 1}`}
+                                                        className="w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 pr-11 text-base font-normal text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                                    />
+                                                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
+                                                        yrs
+                                                    </span>
+                                                </div>
+                                                {childAges.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeChild(idx)}
+                                                        aria-label="Remove child"
+                                                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                        {childAges.length < 10 && (
+                                            <button
+                                                type="button"
+                                                onClick={addChild}
+                                                className="inline-flex items-center gap-1.5 pl-2 pt-1 text-sm font-normal text-neutral-500 transition-colors hover:text-neutral-900"
+                                            >
+                                                <Plus className="h-3.5 w-3.5" />
+                                                Add another child
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 text-xs font-medium text-neutral-500">
+                                    How did you hear about Sav?
+                                    <div className="mt-1.5 flex flex-wrap gap-2">
+                                        {REFERRAL_OPTIONS.map((opt) => (
+                                            <button
+                                                type="button"
+                                                key={opt}
+                                                onClick={() => setReferral(opt)}
+                                                className={cn(
+                                                    "rounded-full border px-3.5 py-1.5 text-sm font-normal transition-colors",
+                                                    referral === opt
+                                                        ? "border-amber-600 bg-amber-600 text-white"
+                                                        : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900",
+                                                )}
+                                            >
+                                                {opt}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {referral === "Other" && (
+                                        <input
+                                            type="text"
+                                            value={referralOther}
+                                            onChange={(e) => setReferralOther(e.target.value)}
+                                            placeholder="Where did you hear about us?"
+                                            className="mt-2 w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-base font-normal text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                        />
+                                    )}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={saveDetails}
+                                    disabled={enrichPending}
+                                    className="mt-5 w-full rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                                >
+                                    {enrichPending ? "Saving…" : "Save my details"}
+                                </button>
+                            </div>
+                        )}
+
                         <a
-                            href={whatsappHref()}
+                            href={config.bookUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-8 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                            className="mt-7 flex items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-3 transition-colors hover:border-neutral-300"
                         >
-                            <MessageCircle className="h-4 w-4" />
-                            Chat with us on WhatsApp
+                            <Image
+                                src="/bk.png"
+                                alt="Digital Savvy Parenting book by Yetty Williams"
+                                width={48}
+                                height={64}
+                                className="shrink-0 object-contain drop-shadow"
+                            />
+                            <span className="flex-1">
+                                <span className="block text-xs font-semibold uppercase tracking-wider text-amber-700">
+                                    While you wait
+                                </span>
+                                <span className="block text-sm font-medium text-neutral-900">
+                                    Read Yetty&apos;s book, Digital Savvy Parenting
+                                </span>
+                            </span>
+                            <ArrowRight className="h-4 w-4 shrink-0 text-neutral-400" />
                         </a>
                     </div>
                 ) : (
                     <>
-                        <div className="h-1 w-full bg-neutral-200">
-                            <div
-                                className="h-full bg-amber-600 transition-all duration-300 ease-out"
-                                style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
-                            />
-                        </div>
-                        <div className="px-7 py-8" onKeyDown={onKeyDown}>
-                            <DialogTitle className="sr-only">Join the Sav waitlist</DialogTitle>
-                            <DialogDescription className="sr-only">
-                                A few quick questions so we can tailor Sav for you.
+                        <div className="h-1 w-full bg-amber-600" />
+                        <div className="px-7 py-8">
+                            <DialogTitle className="font-heading text-2xl tracking-tight text-neutral-900">
+                                Join the waitlist
+                            </DialogTitle>
+                            <DialogDescription className="mt-1.5 text-sm text-neutral-500">
+                                Enter your email and you&apos;re in — we&apos;ll only email when
+                                Sav is ready for you.
                             </DialogDescription>
+
                             <input
                                 type="text"
                                 name="website"
@@ -258,197 +483,39 @@ function WaitlistDialog({
                                 onChange={(e) => setWebsite(e.target.value)}
                                 className="absolute -left-[9999px] h-0 w-0 opacity-0"
                             />
-                            <p className="text-xs font-medium uppercase tracking-[0.2em] text-amber-700">
-                                Step {step + 1} of {TOTAL_STEPS}
-                            </p>
 
-                            <div className="mt-4 min-h-[196px]">
-                                {step === 0 && (
-                                    <div>
-                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
-                                            What&apos;s your email?
-                                        </h2>
-                                        <p className="mt-1.5 text-sm text-neutral-500">
-                                            We&apos;ll only email when Sav is ready for you.
-                                        </p>
-                                        <input
-                                            type="email"
-                                            inputMode="email"
-                                            autoFocus
-                                            value={email}
-                                            onChange={(e) => {
-                                                setEmail(e.target.value);
-                                                if (emailError) setEmailError(null);
-                                            }}
-                                            placeholder="you@email.com"
-                                            className="mt-5 w-full rounded-full border border-neutral-300 bg-white px-5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                        />
-                                        {emailError && (
-                                            <p className="mt-2 pl-1 text-sm text-red-600">
-                                                {emailError}
-                                            </p>
-                                        )}
-                                    </div>
-                                )}
-
-                                {step === 1 && (
-                                    <div>
-                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
-                                            Your phone number?
-                                        </h2>
-                                        <p className="mt-1.5 text-sm text-neutral-500">
-                                            Optional — early members get WhatsApp access to chat with
-                                            Yetty directly.
-                                        </p>
-                                        <input
-                                            type="tel"
-                                            inputMode="tel"
-                                            autoFocus
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            placeholder="+234 801 234 5678"
-                                            className="mt-5 w-full rounded-full border border-neutral-300 bg-white px-5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                        />
-                                    </div>
-                                )}
-
-                                {step === 2 && (
-                                    <div>
-                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
-                                            How old are your children?
-                                        </h2>
-                                        <p className="mt-1.5 text-sm text-neutral-500">
-                                            Optional — helps us tailor advice to their stage.
-                                        </p>
-                                        <div className="mt-5 space-y-2">
-                                            {childAges.map((age, idx) => (
-                                                <div key={idx} className="flex items-center gap-2">
-                                                    <div className="relative flex-1">
-                                                        <input
-                                                            type="number"
-                                                            inputMode="numeric"
-                                                            min={0}
-                                                            max={25}
-                                                            autoFocus={idx === 0}
-                                                            value={age}
-                                                            onChange={(e) =>
-                                                                updateChild(idx, e.target.value.replace(/\D/g, ""))
-                                                            }
-                                                            placeholder={`Child ${idx + 1}`}
-                                                            className="w-full rounded-full border border-neutral-300 bg-white px-5 py-2.5 pr-12 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                                                        />
-                                                        <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
-                                                            yrs
-                                                        </span>
-                                                    </div>
-                                                    {childAges.length > 1 && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => removeChild(idx)}
-                                                            aria-label="Remove child"
-                                                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
-                                                        >
-                                                            <X className="h-4 w-4" />
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            ))}
-                                            {childAges.length < 10 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={addChild}
-                                                    className="inline-flex items-center gap-1.5 pl-2 pt-1 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
-                                                >
-                                                    <Plus className="h-3.5 w-3.5" />
-                                                    Add another child
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {step === 3 && (
-                                    <div>
-                                        <h2 className="font-heading text-2xl tracking-tight text-neutral-900">
-                                            How did you hear about Sav?
-                                        </h2>
-                                        <p className="mt-1.5 text-sm text-neutral-500">
-                                            Optional — it helps us reach more parents like you.
-                                        </p>
-                                        <div className="mt-5 flex flex-wrap gap-2">
-                                            {REFERRAL_OPTIONS.map((opt) => (
-                                                <button
-                                                    type="button"
-                                                    key={opt}
-                                                    onClick={() => setReferral(opt)}
-                                                    className={cn(
-                                                        "rounded-full border px-4 py-2 text-sm transition-colors",
-                                                        referral === opt
-                                                            ? "border-amber-600 bg-amber-600 text-white"
-                                                            : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900",
-                                                    )}
-                                                >
-                                                    {opt}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {referral === "Other" && (
-                                            <input
-                                                type="text"
-                                                autoFocus
-                                                value={referralOther}
-                                                onChange={(e) => setReferralOther(e.target.value)}
-                                                placeholder="Where did you hear about us?"
-                                                className="mt-3 w-full rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                            />
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            {state.status === "error" && state.message && (
-                                <p className="mt-3 text-sm text-red-600">{state.message}</p>
+                            <input
+                                type="email"
+                                inputMode="email"
+                                autoFocus
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    if (emailError) setEmailError(null);
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault();
+                                        submitEmail();
+                                    }
+                                }}
+                                placeholder="you@email.com"
+                                className="mt-6 w-full rounded-full border border-neutral-300 bg-white px-5 py-3 text-base text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                            />
+                            {emailError && (
+                                <p className="mt-2 pl-1 text-sm text-red-600">{emailError}</p>
                             )}
+                            {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
-                            <div className="mt-7 flex items-center justify-between">
-                                {step > 0 ? (
-                                    <button
-                                        type="button"
-                                        onClick={back}
-                                        disabled={pending}
-                                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-neutral-500 transition-colors hover:text-neutral-900 disabled:opacity-50"
-                                    >
-                                        <ArrowLeft className="h-4 w-4" />
-                                        Back
-                                    </button>
-                                ) : (
-                                    <span />
-                                )}
-                                <button
-                                    type="button"
-                                    onClick={next}
-                                    disabled={pending}
-                                    className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-                                >
-                                    {step === TOTAL_STEPS - 1
-                                        ? pending
-                                            ? "Joining…"
-                                            : "Join the waitlist"
-                                        : "Continue"}
-                                    {!pending && <ArrowRight className="h-4 w-4" />}
-                                </button>
-                            </div>
-
-                            {step > 0 && (
-                                <button
-                                    type="button"
-                                    onClick={next}
-                                    disabled={pending}
-                                    className="mt-4 block w-full text-center text-xs text-neutral-400 transition-colors hover:text-neutral-600 disabled:opacity-50"
-                                >
-                                    {step === TOTAL_STEPS - 1 ? "Skip & join" : "Skip this question"}
-                                </button>
-                            )}
+                            <button
+                                type="button"
+                                onClick={submitEmail}
+                                disabled={pending}
+                                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-neutral-900 px-6 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                            >
+                                {pending ? "Joining…" : "Join the waitlist"}
+                                {!pending && <ArrowRight className="h-4 w-4" />}
+                            </button>
                         </div>
                     </>
                 )}
@@ -516,36 +583,6 @@ function Bubble({ side, children }: { side: "user" | "sav"; children: React.Reac
                 {children}
             </div>
         </div>
-    );
-}
-
-function CredibilityBar() {
-    const items = [
-        "YALE SCHOOL OF MANAGEMENT MBA",
-        "UNIVERSITY OF CAMBRIDGE",
-        "FORMER GOOGLE BUSINESS MENTOR",
-        "FORBES 30 UNDER 50",
-        "EMCC ACCREDITED COACH",
-        "FEATURED IN THE GUARDIAN",
-    ];
-    return (
-        <section className="border-y-2 border-neutral-300 bg-white/60 py-8">
-            <p className="mb-6 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-neutral-500">
-                The wisdom behind Sav
-            </p>
-            <div className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-                <div className="flex w-max animate-marquee items-center group-hover:[animation-play-state:paused]">
-                    {[...items, ...items].map((label, i) => (
-                        <div key={i} className="flex items-center" aria-hidden={i >= items.length}>
-                            <span className="whitespace-nowrap text-xs font-semibold tracking-wider text-neutral-600 md:text-sm">
-                                {label}
-                            </span>
-                            <span className="mx-8 h-1 w-1 shrink-0 rounded-full bg-amber-400/70" />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
     );
 }
 
@@ -656,47 +693,17 @@ function Testimonials() {
     );
 }
 
-function BookCallout() {
-    return (
-        <section className="px-6 py-20 md:px-12 md:py-24">
-            <div className="mx-auto grid max-w-5xl items-center gap-12 rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:grid-cols-2 md:p-12">
-                <div className="relative mx-auto aspect-[3/4] w-full max-w-[280px]">
-                    <Image
-                        src="/bk.png"
-                        alt="Digital Savvy Parenting book by Yetty Williams"
-                        fill
-                        sizes="(min-width: 768px) 280px, 60vw"
-                        className="object-contain drop-shadow-2xl transition-transform duration-500 hover:-translate-y-2"
-                    />
-                </div>
-                <div>
-                    <div className="mb-4 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">
-                        Read while you wait
-                    </div>
-                    <h2 className="font-heading text-3xl leading-tight tracking-tight text-neutral-900 md:text-4xl">
-                        Digital Savvy Parenting
-                    </h2>
-                    <p className="mt-5 text-lg leading-relaxed text-neutral-700">
-                        Yetty&apos;s research-backed framework for raising responsible digital
-                        citizens in today&apos;s fast-paced, screen-first world. The thinking
-                        behind Sav, in book form.
-                    </p>
-                    <a
-                        href={config.bookUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-                    >
-                        Get the book
-                        <ArrowRight className="h-4 w-4" />
-                    </a>
-                </div>
-            </div>
-        </section>
-    );
-}
-
 function MeetYetty() {
+    const credentials = [
+        "📚 Author, Digital Savvy Parenting",
+        "🎓 Yale MBA",
+        "🎓 University of Cambridge",
+        "🎤 Former Google Business Mentor",
+        "🏆 Forbes 30 Under 50",
+        "✅ EMCC Accredited Coach",
+        "📰 Featured in The Guardian",
+    ];
+
     return (
         <section className="px-6 py-20 md:px-12 md:py-24">
             <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-[1fr_1.4fr]">
@@ -721,10 +728,15 @@ function MeetYetty() {
                         LagosMums — Africa&apos;s largest parenting community. Sav is the
                         distilled version of that wisdom: available to you, on demand.
                     </p>
-                    <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-neutral-500">
-                        <span>📚 Author, Digital Savvy Parenting</span>
-                        <span>🎓 Yale MBA</span>
-                        <span>🎤 Former Google Business Mentor</span>
+                    <div className="mt-8 flex flex-wrap gap-2">
+                        {credentials.map((c) => (
+                            <span
+                                key={c}
+                                className="rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-sm text-neutral-600"
+                            >
+                                {c}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -783,4 +795,3 @@ function SiteFooter() {
         </footer>
     );
 }
-
