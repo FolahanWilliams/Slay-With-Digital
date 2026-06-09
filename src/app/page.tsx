@@ -526,66 +526,81 @@ function WaitlistDialog({
 
 function PhoneMockup() {
     return (
-        <div className="relative mx-auto w-full max-w-[340px]">
+        <div className="relative mx-auto w-full max-w-[500px]">
             <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-amber-100 via-rose-100 to-orange-100 blur-3xl opacity-70" />
-            <div className="relative rounded-[2.5rem] border-[10px] border-neutral-900 bg-white shadow-2xl">
-                <div className="absolute left-1/2 top-0 z-10 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-neutral-900" />
-                <div className="overflow-hidden rounded-[1.75rem] bg-[#FBF7F2]">
-                    <div className="flex items-center justify-between border-b border-neutral-200 px-5 pb-3 pt-9">
-                        <div className="flex items-center gap-2.5">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-rose-400 font-heading text-base font-bold text-white">
-                                S
-                            </div>
-                            <div>
-                                <p className="text-sm font-semibold text-neutral-900">Sav</p>
-                                <p className="text-[10px] text-emerald-600">● online</p>
-                            </div>
-                        </div>
-                        <MessageCircle className="h-4 w-4 text-neutral-400" />
-                    </div>
-                    <div className="space-y-3 px-4 py-5">
-                        <Bubble side="user">
-                            Toddler refusing to brush teeth again 😩 it&apos;s 9pm
-                        </Bubble>
-                        <Bubble side="sav">
-                            Bedtime power struggles — classic. Two-year-olds need control, not
-                            commands.
-                        </Bubble>
-                        <Bubble side="sav">
-                            Try: <span className="font-medium">&ldquo;Blue brush or red brush?&rdquo;</span>{" "}
-                            Choice = compliance. Want a 30-second song too? 🎵
-                        </Bubble>
-                        <Bubble side="user">trying it now…</Bubble>
-                        <Bubble side="sav">I&apos;ll be here. You&apos;ve got this. 💛</Bubble>
+            <div className="relative flex flex-wrap items-start justify-center gap-4">
+                <PhoneCard>
+                    <Bubble side="user">
+                        Toddler refusing to brush teeth again 😩 it&apos;s 9pm
+                    </Bubble>
+                    <Bubble side="sav">
+                        Bedtime power struggles — classic. Two-year-olds need control, not
+                        commands.
+                    </Bubble>
+                    <Bubble side="sav">
+                        Try: <span className="font-medium">&ldquo;Blue brush or red brush?&rdquo;</span>{" "}
+                        Choice = compliance. Want a 30-second song too? 🎵
+                    </Bubble>
+                    <Bubble side="user">trying it now…</Bubble>
+                    <Bubble side="sav">I&apos;ll be here. You&apos;ve got this. 💛</Bubble>
+                </PhoneCard>
 
-                        <div className="flex justify-center py-1">
-                            <span className="rounded-full bg-neutral-200/70 px-2.5 py-0.5 text-[10px] font-medium text-neutral-500">
-                                Today
-                            </span>
-                        </div>
+                <PhoneCard className="sm:mt-12">
+                    <Bubble side="user">
+                        My 11yo melts down every time I say get off his video game 🎮
+                    </Bubble>
+                    <Bubble side="sav">
+                        Pulling him off mid-game feels like leaving a live football match in
+                        the middle to go do the dishes — it&apos;s the timing, not defiance.
+                    </Bubble>
+                    <Bubble side="sav">
+                        Give a runway, not &ldquo;off now&rdquo;: try{" "}
+                        <span className="font-medium">&ldquo;Come to the kitchen by 6pm&rdquo;</span>{" "}
+                        — or a 10-minute warning so he can finish.
+                    </Bubble>
+                    <Bubble side="user">that makes sense</Bubble>
+                    <Bubble side="sav">
+                        He keeps his word, you keep your calm — agree it before he starts next
+                        time. 💛
+                    </Bubble>
+                </PhoneCard>
+            </div>
+        </div>
+    );
+}
 
-                        <Bubble side="user">
-                            My 11yo melts down every time I say get off his game 🎮😤
-                        </Bubble>
-                        <Bubble side="sav">
-                            Pulling him mid-match feels like letting his team down — that&apos;s
-                            bad timing, not defiance.
-                        </Bubble>
-                        <Bubble side="sav">
-                            Give a runway, not &ldquo;off now&rdquo;:{" "}
-                            <span className="font-medium">&ldquo;Two more games, then we save and stop&rdquo;</span>{" "}
-                            — or a 10-minute warning. Predictable beats sudden.
-                        </Bubble>
-                        <Bubble side="user">so a heads-up instead of &ldquo;off now&rdquo;?</Bubble>
-                        <Bubble side="sav">
-                            Exactly — set it before he logs on. He keeps his word, you keep your
-                            calm. 💛
-                        </Bubble>
-                    </div>
-                    <div className="border-t border-neutral-200 px-4 py-3">
-                        <div className="flex items-center gap-2 rounded-full bg-neutral-100 px-4 py-2">
-                            <span className="text-xs text-neutral-400">Type a message…</span>
+function PhoneCard({
+    children,
+    className,
+}: {
+    children: React.ReactNode;
+    className?: string;
+}) {
+    return (
+        <div
+            className={cn(
+                "relative w-[220px] shrink-0 rounded-[2.5rem] border-[10px] border-neutral-900 bg-white shadow-2xl",
+                className,
+            )}
+        >
+            <div className="absolute left-1/2 top-0 z-10 h-5 w-24 -translate-x-1/2 rounded-b-2xl bg-neutral-900" />
+            <div className="overflow-hidden rounded-[1.75rem] bg-[#FBF7F2]">
+                <div className="flex items-center justify-between border-b border-neutral-200 px-4 pb-2.5 pt-7">
+                    <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-rose-400 font-heading text-sm font-bold text-white">
+                            S
                         </div>
+                        <div>
+                            <p className="text-sm font-semibold text-neutral-900">Sav</p>
+                            <p className="text-[10px] text-emerald-600">● online</p>
+                        </div>
+                    </div>
+                    <MessageCircle className="h-4 w-4 text-neutral-400" />
+                </div>
+                <div className="space-y-2.5 px-3 py-4">{children}</div>
+                <div className="border-t border-neutral-200 px-3 py-2.5">
+                    <div className="flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1.5">
+                        <span className="text-[11px] text-neutral-400">Type a message…</span>
                     </div>
                 </div>
             </div>
