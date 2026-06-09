@@ -90,3 +90,6 @@ If you're using Claude Code, open this repo and ask:
 - *"Change the headline to X"* — straightforward.
 
 There's a `CLAUDE.md` in the root with project context Claude reads first.
+
+<!-- build check: forcing a fresh Vercel build to capture logs -->
+
