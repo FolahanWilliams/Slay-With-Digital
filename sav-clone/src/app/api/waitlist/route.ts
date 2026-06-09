@@ -78,6 +78,37 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
         );
     }
 
+    // Enrichment: the email is captured up front, then the optional phone /
+    // children's ages / referral come back in a second request. Update the
+    // existing row instead of inserting a duplicate. Only the fields actually
+    // provided are written, so a partial answer never clears earlier ones.
+    if (data.mode === "enrich") {
+        const update: Record<string, unknown> = {};
+        if (parsed.data.phone !== null) update.phone = parsed.data.phone;
+        if (parsed.data.childrenAges.length > 0)
+            update.children_ages = parsed.data.childrenAges;
+        if (parsed.data.referralSource !== null)
+            update.referral_source = parsed.data.referralSource;
+
+        if (Object.keys(update).length === 0) {
+            return json({ status: "success", message: "You're on the list." });
+        }
+
+        const { error } = await supabase
+            .from("sav_waitlist")
+            .update(update)
+            .eq("email", parsed.data.email);
+
+        if (error) {
+            console.error("[sav waitlist] enrich update failed:", error);
+            return json(
+                { status: "error", message: "Something went wrong. Please try again." },
+                500,
+            );
+        }
+        return json({ status: "success", message: "Thanks — that helps!" });
+    }
+
     const { error } = await supabase.from("sav_waitlist").insert({
         email: parsed.data.email,
         phone: parsed.data.phone,
