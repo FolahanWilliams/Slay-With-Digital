@@ -706,9 +706,13 @@ function MeetYetty() {
                 </h2>
                 <p className="mt-6 text-lg leading-relaxed text-neutral-700">
                     A certified digital parenting coach trained in cyberpsychology, and a Yale
-                    MBA. Yetty has reached millions of parents — from Lagos to the world. Sav
-                    distills that expertise into a third parent: calm, judgement-free, and
-                    available 24/7.
+                    MBA. As founder of LagosMums, Yetty has reached millions of parents — from
+                    Lagos to the world.
+                </p>
+                <p className="mt-4 text-lg leading-relaxed text-neutral-700">
+                    She built Sav for the hard moments of raising kids in the digital age —
+                    navigating screen time and AI — so you always have a calm, judgement-free
+                    voice in your pocket, 24/7.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-2">
                     {credentials.map((c) => (
