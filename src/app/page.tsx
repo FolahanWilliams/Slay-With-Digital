@@ -12,6 +12,7 @@ import {
     Clock,
     Shield,
     Star,
+    Sparkles,
 } from "lucide-react";
 import {
     Dialog,
@@ -229,6 +230,32 @@ function WaitlistDialog({
     const [referralOther, setReferralOther] = useState("");
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
+    const [inviteCopied, setInviteCopied] = useState(false);
+
+    const inviteMessage =
+        "I just joined Moms Training AI, Yetty's exclusive club shaping Sav: a judgement-free parenting coach for the digital age. Come join us 💛";
+    const inviteMoms = async () => {
+        const url = config.siteUrl;
+        if (typeof navigator !== "undefined" && navigator.share) {
+            try {
+                await navigator.share({
+                    title: "Moms Training AI",
+                    text: inviteMessage,
+                    url,
+                });
+            } catch {
+                /* share sheet dismissed */
+            }
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(`${inviteMessage} ${url}`);
+            setInviteCopied(true);
+            setTimeout(() => setInviteCopied(false), 2500);
+        } catch {
+            /* clipboard unavailable */
+        }
+    };
 
     const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
     const removeChild = (idx: number) =>
@@ -304,14 +331,41 @@ function WaitlistDialog({
                                 You&apos;re in.
                             </DialogTitle>
                             <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
-                                You&apos;re in the first group. Message us on WhatsApp to
-                                personalize Sav for your family and help shape what it becomes.
+                                You&apos;re a founding member of our exclusive early-access
+                                club. Bring other moms in, and we&apos;ll shape Sav together on
+                                WhatsApp.
                             </p>
+
+                            <div className="mx-auto mt-6 max-w-[16rem] rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-[1.5px] shadow-lg">
+                                <div className="rounded-[15px] bg-white px-5 py-4">
+                                    <div className="flex items-center justify-center gap-1.5">
+                                        <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                                        <span className="text-[11px] font-semibold uppercase tracking-widest text-amber-700">
+                                            Founding Member
+                                        </span>
+                                    </div>
+                                    <p className="mt-1.5 font-heading text-xl font-bold tracking-tight text-neutral-900">
+                                        Moms Training AI
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-neutral-500">
+                                        Exclusive early-access club
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={inviteMoms}
+                                className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                            >
+                                <Heart className="h-4 w-4" />
+                                {inviteCopied ? "Invite link copied!" : "Invite other moms"}
+                            </button>
                             <a
                                 href={whatsappHref()}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                                className="mt-3 inline-flex items-center gap-2 rounded-full border border-neutral-300 px-7 py-3.5 text-base font-medium text-neutral-800 transition-colors hover:border-neutral-900"
                             >
                                 <MessageCircle className="h-4 w-4" />
                                 Chat with us on WhatsApp
