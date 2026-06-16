@@ -12,6 +12,7 @@ import {
     Clock,
     Shield,
     Star,
+    Sparkles,
 } from "lucide-react";
 import {
     Dialog,
@@ -229,6 +230,32 @@ function WaitlistDialog({
     const [referralOther, setReferralOther] = useState("");
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
+    const [inviteCopied, setInviteCopied] = useState(false);
+
+    const inviteMessage =
+        "I just joined Moms Training AI, Yetty's exclusive club shaping Sav: a judgement-free parenting coach for the digital age. Come join us 💛";
+    const inviteMoms = async () => {
+        const url = config.siteUrl;
+        if (typeof navigator !== "undefined" && navigator.share) {
+            try {
+                await navigator.share({
+                    title: "Moms Training AI",
+                    text: inviteMessage,
+                    url,
+                });
+            } catch {
+                /* share sheet dismissed */
+            }
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(`${inviteMessage} ${url}`);
+            setInviteCopied(true);
+            setTimeout(() => setInviteCopied(false), 2500);
+        } catch {
+            /* clipboard unavailable */
+        }
+    };
 
     const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
     const removeChild = (idx: number) =>
@@ -304,14 +331,41 @@ function WaitlistDialog({
                                 You&apos;re in.
                             </DialogTitle>
                             <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
-                                You&apos;re part of the first group. As a thank-you, message us
-                                directly on WhatsApp to chat one-on-one and help shape Sav.
+                                You&apos;re a founding member of our exclusive early-access
+                                club. Bring other moms in, and we&apos;ll shape Sav together on
+                                WhatsApp.
                             </p>
+
+                            <div className="mx-auto mt-6 max-w-[16rem] rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-[1.5px] shadow-lg">
+                                <div className="rounded-[15px] bg-white px-5 py-4">
+                                    <div className="flex items-center justify-center gap-1.5">
+                                        <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                                        <span className="text-[11px] font-semibold uppercase tracking-widest text-amber-700">
+                                            Founding Member
+                                        </span>
+                                    </div>
+                                    <p className="mt-1.5 font-heading text-xl font-bold tracking-tight text-neutral-900">
+                                        Moms Training AI
+                                    </p>
+                                    <p className="mt-0.5 text-xs text-neutral-500">
+                                        Exclusive early-access club
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={inviteMoms}
+                                className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                            >
+                                <Heart className="h-4 w-4" />
+                                {inviteCopied ? "Invite link copied!" : "Invite other moms"}
+                            </button>
                             <a
                                 href={whatsappHref()}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-7 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+                                className="mt-3 inline-flex items-center gap-2 rounded-full border border-neutral-300 px-7 py-3.5 text-base font-medium text-neutral-800 transition-colors hover:border-neutral-900"
                             >
                                 <MessageCircle className="h-4 w-4" />
                                 Chat with us on WhatsApp
@@ -545,18 +599,19 @@ function PhoneMockup() {
                     </div>
                     <div className="space-y-3 px-4 py-5">
                         <Bubble side="user">
-                            Toddler refusing to brush teeth again 😩 it&apos;s 9pm
+                            My 11yo melts down every time I say get off his video game 🎮
                         </Bubble>
                         <Bubble side="sav">
-                            Bedtime power struggles — classic. Two-year-olds need control, not
-                            commands.
+                            Pulling him off mid-game feels like leaving a live football match in
+                            the middle to do the dishes — bad timing, not defiance.
                         </Bubble>
                         <Bubble side="sav">
-                            Try: <span className="font-medium">&ldquo;Blue brush or red brush?&rdquo;</span>{" "}
-                            Choice = compliance. Want a 30-second song too? 🎵
+                            Give a runway, not &ldquo;off now&rdquo;: try{" "}
+                            <span className="font-medium">&ldquo;Come to the kitchen by 6pm&rdquo;</span>,
+                            or a 10-min warning so he can finish.
                         </Bubble>
-                        <Bubble side="user">trying it now…</Bubble>
-                        <Bubble side="sav">I&apos;ll be here. You&apos;ve got this. 💛</Bubble>
+                        <Bubble side="user">that makes sense</Bubble>
+                        <Bubble side="sav">He keeps his word, you keep your calm. 💛</Bubble>
                     </div>
                     <div className="border-t border-neutral-200 px-4 py-3">
                         <div className="flex items-center gap-2 rounded-full bg-neutral-100 px-4 py-2">
@@ -639,17 +694,14 @@ function Testimonials() {
         {
             text: "My session with Yetty was insightful and thought-provoking. She helped me gain clarity on a cloudy area. She's so down-to-earth and so helpful.",
             author: "Ebuka",
-            role: "LagosMums community",
         },
         {
-            text: "If you need to stay relevant in this digital age, Yetty's guidance is by far the best. Practical tools and methods I could use immediately.",
-            author: "Workshop attendee",
-            role: "Parent of two",
+            text: "If you need to stay relevant in this digital age, Yetty's guidance is by far the best. She shared practical tools and methods I could use immediately.",
+            author: "Mum of two",
         },
         {
             text: "The most informative coaching I've attended in a long while. Yetty shares lots of personal experiences that every parent can relate to.",
-            author: "Workshop attendee",
-            role: "LagosMums member",
+            author: "Parents",
         },
     ];
 
@@ -681,10 +733,7 @@ function Testimonials() {
                             <p className="mb-6 flex-1 leading-relaxed text-neutral-700">
                                 &ldquo;{review.text}&rdquo;
                             </p>
-                            <div>
-                                <p className="font-semibold text-neutral-900">{review.author}</p>
-                                <p className="text-sm text-neutral-500">{review.role}</p>
-                            </div>
+                            <p className="text-center font-semibold text-neutral-900">{review.author}</p>
                         </div>
                     ))}
                 </div>
@@ -696,48 +745,38 @@ function Testimonials() {
 function MeetYetty() {
     const credentials = [
         "📚 Author, Digital Savvy Parenting",
-        "🎓 Yale MBA",
-        "🎓 University of Cambridge",
-        "🎤 Former Google Business Mentor",
         "🏆 Forbes 30 Under 50",
-        "✅ EMCC Accredited Coach",
-        "📰 Featured in The Guardian",
+        "🛡️ Trained in online safety & child safeguarding",
     ];
 
     return (
         <section className="px-6 py-20 md:px-12 md:py-24">
-            <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-[1fr_1.4fr]">
-                <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-3xl bg-neutral-100 shadow-lg">
-                    <Image
-                        src="/yetty.jpg"
-                        alt="Yetty Williams, founder of LagosMums"
-                        fill
-                        sizes="(min-width: 768px) 320px, 80vw"
-                        className="object-cover"
-                    />
-                </div>
-                <div>
-                    <p className="mb-3 text-xs font-medium uppercase tracking-widest text-amber-700">
-                        Meet your guide
-                    </p>
-                    <h2 className="font-heading text-3xl leading-tight tracking-tight text-neutral-900 md:text-4xl">
-                        Built by Yetty Williams, founder of LagosMums.
-                    </h2>
-                    <p className="mt-6 text-lg leading-relaxed text-neutral-700">
-                        For 15+ years, Yetty has helped hundreds of thousands of parents through
-                        LagosMums — Africa&apos;s largest parenting community. Sav is the
-                        distilled version of that wisdom: available to you, on demand.
-                    </p>
-                    <div className="mt-8 flex flex-wrap gap-2">
-                        {credentials.map((c) => (
-                            <span
-                                key={c}
-                                className="rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-sm text-neutral-600"
-                            >
-                                {c}
-                            </span>
-                        ))}
-                    </div>
+            <div className="mx-auto max-w-2xl text-center">
+                <p className="mb-3 text-xs font-medium uppercase tracking-widest text-amber-700">
+                    Meet your guide
+                </p>
+                <h2 className="font-heading text-3xl leading-tight tracking-tight text-neutral-900 md:text-4xl">
+                    Built by Yetty Williams
+                </h2>
+                <p className="mt-6 text-lg leading-relaxed text-neutral-700">
+                    A certified digital parenting coach trained in cyberpsychology, and a Yale
+                    MBA. As founder of LagosMums, Yetty has reached millions of parents, from
+                    Lagos to the world.
+                </p>
+                <p className="mt-4 text-lg leading-relaxed text-neutral-700">
+                    She built Sav for the hard moments of raising kids in the digital age, like
+                    navigating screen time and AI. So you always have a calm, judgement-free
+                    voice in your pocket, 24/7.
+                </p>
+                <div className="mt-8 flex flex-wrap justify-center gap-2">
+                    {credentials.map((c) => (
+                        <span
+                            key={c}
+                            className="rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-sm text-neutral-600"
+                        >
+                            {c}
+                        </span>
+                    ))}
                 </div>
             </div>
         </section>
@@ -752,7 +791,7 @@ function ClosingCta({ onJoin }: { onJoin: () => void }) {
                     Be among the first to meet Sav.
                 </h2>
                 <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-neutral-300 md:text-lg">
-                    Early waitlist members get direct WhatsApp access to help shape what Sav
+                    Get early access to personalize Sav for your family and help shape what it
                     becomes.
                 </p>
                 <button
