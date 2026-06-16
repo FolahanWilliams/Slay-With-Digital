@@ -62,7 +62,9 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
         childrenAges: Array.isArray(data.childrenAges) ? data.childrenAges.map(String) : [],
         referralSource:
             typeof data.referralSource === "string" ? data.referralSource : "",
-        referredBy: typeof data.referredBy === "string" ? data.referredBy : "",
+        digitalConcerns: Array.isArray(data.digitalConcerns)
+            ? data.digitalConcerns.map(String)
+            : [],
     });
 
     if (!parsed.success) {
@@ -90,8 +92,8 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
             update.children_ages = parsed.data.childrenAges;
         if (parsed.data.referralSource !== null)
             update.referral_source = parsed.data.referralSource;
-        if (parsed.data.referredBy !== null)
-            update.referred_by = parsed.data.referredBy;
+        if (parsed.data.digitalConcerns.length > 0)
+            update.digital_concerns = parsed.data.digitalConcerns;
 
         if (Object.keys(update).length === 0) {
             return json({ status: "success", message: "You're on the list." });
@@ -102,16 +104,16 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
             .update(update)
             .eq("email", parsed.data.email);
 
-        // referred_by is optional infrastructure. If the column hasn't been
-        // added to the table yet, drop it and retry so the rest of the
+        // digital_concerns is optional infrastructure. If the column hasn't
+        // been added to the table yet, drop it and retry so the rest of the
         // answers still save (and signups are never blocked over it).
         if (
             error &&
-            "referred_by" in update &&
+            "digital_concerns" in update &&
             (error.code === "PGRST204" || error.code === "42703")
         ) {
             const rest = { ...update };
-            delete rest.referred_by;
+            delete rest.digital_concerns;
             if (Object.keys(rest).length > 0) {
                 ({ error } = await supabase
                     .from("sav_waitlist")

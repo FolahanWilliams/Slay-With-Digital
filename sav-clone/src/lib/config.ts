@@ -39,7 +39,7 @@ export const config = {
         process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE ??
         "Hi Sav! I just joined the waitlist 💛",
     lagosMumsUrl: "https://lagosmums.com",
-    yettyWilliamsUrl: "https://yettywilliams.com",
+    yettyWilliamsUrl: "https://www.linkedin.com/in/yettywilliams",
     bookUrl: "https://digitalsavvyparenting.com/digital-savvy-parenting-book",
     founder: {
         name: "Yetty Williams",

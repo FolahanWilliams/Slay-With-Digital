@@ -203,6 +203,16 @@ const REFERRAL_OPTIONS = [
     "Other",
 ] as const;
 
+const CONCERN_OPTIONS = [
+    "Screen Addiction",
+    "Online Safety",
+    "AI Companionship",
+    "Cyberbullying",
+    "Porn Exposure",
+    "Mental Health",
+    "Video Games",
+] as const;
+
 function WaitlistDialog({
     open,
     onOpenChange,
@@ -228,7 +238,7 @@ function WaitlistDialog({
     const [childAges, setChildAges] = useState<string[]>([""]);
     const [referral, setReferral] = useState("");
     const [referralOther, setReferralOther] = useState("");
-    const [referredBy, setReferredBy] = useState("");
+    const [concerns, setConcerns] = useState<string[]>([]);
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
     const [inviteCopied, setInviteCopied] = useState(false);
@@ -306,7 +316,7 @@ function WaitlistDialog({
                 phone,
                 childrenAges: childAges,
                 referralSource: referral === "Other" ? referralOther : referral,
-                referredBy,
+                digitalConcerns: concerns,
             });
             if (json.status === "success") setEnrichSaved(true);
         } catch {
@@ -382,7 +392,7 @@ function WaitlistDialog({
                                 </p>
 
                                 <label className="mt-4 block text-xs font-medium text-neutral-500">
-                                    Your phone number
+                                    Your WhatsApp number
                                     <input
                                         type="tel"
                                         inputMode="tel"
@@ -444,6 +454,36 @@ function WaitlistDialog({
                                 </div>
 
                                 <div className="mt-4 text-xs font-medium text-neutral-500">
+                                    Your top digital concerns as a parent{" "}
+                                    <span className="font-normal text-neutral-400">
+                                        (select as many as you like)
+                                    </span>
+                                    <div className="mt-1.5 flex flex-wrap gap-2">
+                                        {CONCERN_OPTIONS.map((opt) => (
+                                            <button
+                                                type="button"
+                                                key={opt}
+                                                onClick={() =>
+                                                    setConcerns((c) =>
+                                                        c.includes(opt)
+                                                            ? c.filter((x) => x !== opt)
+                                                            : [...c, opt],
+                                                    )
+                                                }
+                                                className={cn(
+                                                    "rounded-full border px-3.5 py-1.5 text-sm font-normal transition-colors",
+                                                    concerns.includes(opt)
+                                                        ? "border-amber-600 bg-amber-600 text-white"
+                                                        : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900",
+                                                )}
+                                            >
+                                                {opt}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 text-xs font-medium text-neutral-500">
                                     How did you hear about Sav?
                                     <div className="mt-1.5 flex flex-wrap gap-2">
                                         {REFERRAL_OPTIONS.map((opt) => (
@@ -472,20 +512,6 @@ function WaitlistDialog({
                                         />
                                     )}
                                 </div>
-
-                                <label className="mt-4 block text-xs font-medium text-neutral-500">
-                                    Who referred you?{" "}
-                                    <span className="font-normal text-neutral-400">
-                                        (optional)
-                                    </span>
-                                    <input
-                                        type="text"
-                                        value={referredBy}
-                                        onChange={(e) => setReferredBy(e.target.value)}
-                                        placeholder="Their name"
-                                        className="mt-1.5 w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-base font-normal text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                    />
-                                </label>
 
                                 <button
                                     type="button"
@@ -820,7 +846,7 @@ function SiteFooter() {
             <p className="text-sm text-neutral-500">
                 Brought to you by{" "}
                 <a
-                    href={config.lagosMumsUrl}
+                    href={config.yettyWilliamsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-neutral-900 underline-offset-4 hover:underline"
