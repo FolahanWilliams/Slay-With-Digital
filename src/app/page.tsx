@@ -211,6 +211,7 @@ const CONCERN_OPTIONS = [
     "Porn Exposure",
     "Mental Health",
     "Video Games",
+    "Other",
 ] as const;
 
 function WaitlistDialog({
@@ -241,31 +242,27 @@ function WaitlistDialog({
     const [concerns, setConcerns] = useState<string[]>([]);
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
-    const [inviteCopied, setInviteCopied] = useState(false);
-
     const inviteMessage =
         "I just joined Mums Training AI, Yetty's exclusive club shaping Sav: a judgement-free parenting coach for the digital age. Come join us 💛";
-    const inviteMoms = async () => {
-        const url = config.siteUrl;
+    const whatsappShareHref = `https://wa.me/?text=${encodeURIComponent(
+        `${inviteMessage} ${config.siteUrl}`,
+    )}`;
+    const shareInvite = async () => {
+        // On mobile this surfaces WhatsApp (and "My status") in the native
+        // share sheet; on desktop we open WhatsApp directly instead.
         if (typeof navigator !== "undefined" && navigator.share) {
             try {
                 await navigator.share({
                     title: "Mums Training AI",
                     text: inviteMessage,
-                    url,
+                    url: config.siteUrl,
                 });
             } catch {
                 /* share sheet dismissed */
             }
             return;
         }
-        try {
-            await navigator.clipboard.writeText(`${inviteMessage} ${url}`);
-            setInviteCopied(true);
-            setTimeout(() => setInviteCopied(false), 2500);
-        } catch {
-            /* clipboard unavailable */
-        }
+        window.open(whatsappShareHref, "_blank", "noopener,noreferrer");
     };
 
     const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
@@ -367,11 +364,11 @@ function WaitlistDialog({
 
                             <button
                                 type="button"
-                                onClick={inviteMoms}
+                                onClick={shareInvite}
                                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
                             >
                                 <Heart className="h-4 w-4" />
-                                {inviteCopied ? "Invite link copied!" : "Invite other parents"}
+                                Invite other parents
                             </button>
                         </div>
 
@@ -456,7 +453,7 @@ function WaitlistDialog({
                                 <div className="mt-4 text-xs font-medium text-neutral-500">
                                     Your top digital concerns as a parent{" "}
                                     <span className="font-normal text-neutral-400">
-                                        (select as many as you like)
+                                        (select all that apply)
                                     </span>
                                     <div className="mt-1.5 flex flex-wrap gap-2">
                                         {CONCERN_OPTIONS.map((opt) => (
