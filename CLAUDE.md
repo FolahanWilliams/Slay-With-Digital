@@ -169,6 +169,9 @@ cyberpsychology). The waitlist is a **growth + validation engine**:
 
 Keep current, newest first; one line per impactful change or decision.
 
+- 2026-06-16 — "Invite other parents" now shares via WhatsApp (native
+  share → WhatsApp/My status on mobile, WhatsApp Web on desktop); digital
+  concerns gained an "Other" chip and "select all that apply" wording.
 - 2026-06-16 — Enrichment reshaped: phone → **WhatsApp number**, added a
   multi-select **top digital concerns** question (safe `digital_concerns`
   fallback; needs the prod SQL above), removed "Who referred you?". Footer
