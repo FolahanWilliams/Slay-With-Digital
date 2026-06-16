@@ -20,7 +20,7 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog";
-import { config, whatsappHref } from "@/lib/config";
+import { config } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { track } from "@/lib/track";
 import type { WaitlistFormState } from "@/lib/waitlist";
@@ -363,15 +363,6 @@ function WaitlistDialog({
                                 <Heart className="h-4 w-4" />
                                 {inviteCopied ? "Invite link copied!" : "Invite other parents"}
                             </button>
-                            <a
-                                href={whatsappHref()}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-3 inline-flex items-center gap-2 rounded-full border border-neutral-300 px-7 py-3.5 text-base font-medium text-neutral-800 transition-colors hover:border-neutral-900"
-                            >
-                                <MessageCircle className="h-4 w-4" />
-                                Chat with us on WhatsApp
-                            </a>
                         </div>
 
                         <div className="my-7 h-px w-full bg-neutral-200" />
