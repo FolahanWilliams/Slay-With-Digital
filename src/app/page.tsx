@@ -228,18 +228,19 @@ function WaitlistDialog({
     const [childAges, setChildAges] = useState<string[]>([""]);
     const [referral, setReferral] = useState("");
     const [referralOther, setReferralOther] = useState("");
+    const [referredBy, setReferredBy] = useState("");
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
     const [inviteCopied, setInviteCopied] = useState(false);
 
     const inviteMessage =
-        "I just joined Moms Training AI, Yetty's exclusive club shaping Sav: a judgement-free parenting coach for the digital age. Come join us 💛";
+        "I just joined Mums Training AI, Yetty's exclusive club shaping Sav: a judgement-free parenting coach for the digital age. Come join us 💛";
     const inviteMoms = async () => {
         const url = config.siteUrl;
         if (typeof navigator !== "undefined" && navigator.share) {
             try {
                 await navigator.share({
-                    title: "Moms Training AI",
+                    title: "Mums Training AI",
                     text: inviteMessage,
                     url,
                 });
@@ -305,6 +306,7 @@ function WaitlistDialog({
                 phone,
                 childrenAges: childAges,
                 referralSource: referral === "Other" ? referralOther : referral,
+                referredBy,
             });
             if (json.status === "success") setEnrichSaved(true);
         } catch {
@@ -332,7 +334,7 @@ function WaitlistDialog({
                             </DialogTitle>
                             <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
                                 You&apos;re a founding member of our exclusive early-access
-                                club. Bring other moms in, and we&apos;ll shape Sav together on
+                                club. Bring other parents in, and we&apos;ll shape Sav together on
                                 WhatsApp.
                             </p>
 
@@ -345,7 +347,7 @@ function WaitlistDialog({
                                         </span>
                                     </div>
                                     <p className="mt-1.5 font-heading text-xl font-bold tracking-tight text-neutral-900">
-                                        Moms Training AI
+                                        Mums Training AI
                                     </p>
                                     <p className="mt-0.5 text-xs text-neutral-500">
                                         Exclusive early-access club
@@ -359,7 +361,7 @@ function WaitlistDialog({
                                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
                             >
                                 <Heart className="h-4 w-4" />
-                                {inviteCopied ? "Invite link copied!" : "Invite other moms"}
+                                {inviteCopied ? "Invite link copied!" : "Invite other parents"}
                             </button>
                             <a
                                 href={whatsappHref()}
@@ -479,6 +481,20 @@ function WaitlistDialog({
                                         />
                                     )}
                                 </div>
+
+                                <label className="mt-4 block text-xs font-medium text-neutral-500">
+                                    Who referred you?{" "}
+                                    <span className="font-normal text-neutral-400">
+                                        (optional)
+                                    </span>
+                                    <input
+                                        type="text"
+                                        value={referredBy}
+                                        onChange={(e) => setReferredBy(e.target.value)}
+                                        placeholder="Their name"
+                                        className="mt-1.5 w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-base font-normal text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
+                                    />
+                                </label>
 
                                 <button
                                     type="button"

@@ -19,6 +19,12 @@ export const waitlistSchema = z.object({
         .max(200)
         .optional()
         .transform((s) => (s && s.length > 0 ? s : null)),
+    referredBy: z
+        .string()
+        .trim()
+        .max(100)
+        .optional()
+        .transform((s) => (s && s.length > 0 ? s : null)),
 });
 
 export type WaitlistInput = z.input<typeof waitlistSchema>;
@@ -27,6 +33,9 @@ export type WaitlistFormState = {
     status: "idle" | "success" | "error";
     message?: string;
     fieldErrors?: Partial<
-        Record<"email" | "phone" | "childrenAges" | "referralSource", string>
+        Record<
+            "email" | "phone" | "childrenAges" | "referralSource" | "referredBy",
+            string
+        >
     >;
 };
