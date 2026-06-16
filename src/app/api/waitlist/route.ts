@@ -62,6 +62,7 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
         childrenAges: Array.isArray(data.childrenAges) ? data.childrenAges.map(String) : [],
         referralSource:
             typeof data.referralSource === "string" ? data.referralSource : "",
+        referredBy: typeof data.referredBy === "string" ? data.referredBy : "",
     });
 
     if (!parsed.success) {
@@ -89,15 +90,37 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
             update.children_ages = parsed.data.childrenAges;
         if (parsed.data.referralSource !== null)
             update.referral_source = parsed.data.referralSource;
+        if (parsed.data.referredBy !== null)
+            update.referred_by = parsed.data.referredBy;
 
         if (Object.keys(update).length === 0) {
             return json({ status: "success", message: "You're on the list." });
         }
 
-        const { error } = await supabase
+        let { error } = await supabase
             .from("sav_waitlist")
             .update(update)
             .eq("email", parsed.data.email);
+
+        // referred_by is optional infrastructure. If the column hasn't been
+        // added to the table yet, drop it and retry so the rest of the
+        // answers still save (and signups are never blocked over it).
+        if (
+            error &&
+            "referred_by" in update &&
+            (error.code === "PGRST204" || error.code === "42703")
+        ) {
+            const rest = { ...update };
+            delete rest.referred_by;
+            if (Object.keys(rest).length > 0) {
+                ({ error } = await supabase
+                    .from("sav_waitlist")
+                    .update(rest)
+                    .eq("email", parsed.data.email));
+            } else {
+                error = null;
+            }
+        }
 
         if (error) {
             console.error("[sav waitlist] enrich update failed:", error);
@@ -106,7 +129,7 @@ export async function POST(req: Request): Promise<NextResponse<WaitlistFormState
                 500,
             );
         }
-        return json({ status: "success", message: "Thanks — that helps!" });
+        return json({ status: "success", message: "Thanks, that helps!" });
     }
 
     const { error } = await supabase.from("sav_waitlist").insert({
