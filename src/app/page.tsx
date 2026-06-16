@@ -194,15 +194,6 @@ function Hero({
     );
 }
 
-const REFERRAL_OPTIONS = [
-    "Instagram",
-    "LagosMums",
-    "A friend or family",
-    "Google search",
-    "Facebook / X",
-    "Other",
-] as const;
-
 const CONCERN_OPTIONS = [
     "Screen Addiction",
     "Online Safety",
@@ -237,8 +228,6 @@ function WaitlistDialog({
     // Optional enrichment, collected after the email is already saved.
     const [phone, setPhone] = useState("");
     const [childAges, setChildAges] = useState<string[]>([""]);
-    const [referral, setReferral] = useState("");
-    const [referralOther, setReferralOther] = useState("");
     const [concerns, setConcerns] = useState<string[]>([]);
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
@@ -247,23 +236,6 @@ function WaitlistDialog({
     const whatsappShareHref = `https://wa.me/?text=${encodeURIComponent(
         `${inviteMessage} ${config.siteUrl}`,
     )}`;
-    const shareInvite = async () => {
-        // On mobile this surfaces WhatsApp (and "My status") in the native
-        // share sheet; on desktop we open WhatsApp directly instead.
-        if (typeof navigator !== "undefined" && navigator.share) {
-            try {
-                await navigator.share({
-                    title: "Mums Training AI",
-                    text: inviteMessage,
-                    url: config.siteUrl,
-                });
-            } catch {
-                /* share sheet dismissed */
-            }
-            return;
-        }
-        window.open(whatsappShareHref, "_blank", "noopener,noreferrer");
-    };
 
     const addChild = () => setChildAges((c) => (c.length >= 10 ? c : [...c, ""]));
     const removeChild = (idx: number) =>
@@ -312,7 +284,6 @@ function WaitlistDialog({
                 email,
                 phone,
                 childrenAges: childAges,
-                referralSource: referral === "Other" ? referralOther : referral,
                 digitalConcerns: concerns,
             });
             if (json.status === "success") setEnrichSaved(true);
@@ -362,14 +333,15 @@ function WaitlistDialog({
                                 </div>
                             </div>
 
-                            <button
-                                type="button"
-                                onClick={shareInvite}
+                            <a
+                                href={whatsappShareHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-7 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
                             >
                                 <Heart className="h-4 w-4" />
                                 Invite other parents
-                            </button>
+                            </a>
                         </div>
 
                         <div className="my-7 h-px w-full bg-neutral-200" />
@@ -478,36 +450,6 @@ function WaitlistDialog({
                                             </button>
                                         ))}
                                     </div>
-                                </div>
-
-                                <div className="mt-4 text-xs font-medium text-neutral-500">
-                                    How did you hear about Sav?
-                                    <div className="mt-1.5 flex flex-wrap gap-2">
-                                        {REFERRAL_OPTIONS.map((opt) => (
-                                            <button
-                                                type="button"
-                                                key={opt}
-                                                onClick={() => setReferral(opt)}
-                                                className={cn(
-                                                    "rounded-full border px-3.5 py-1.5 text-sm font-normal transition-colors",
-                                                    referral === opt
-                                                        ? "border-amber-600 bg-amber-600 text-white"
-                                                        : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900",
-                                                )}
-                                            >
-                                                {opt}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    {referral === "Other" && (
-                                        <input
-                                            type="text"
-                                            value={referralOther}
-                                            onChange={(e) => setReferralOther(e.target.value)}
-                                            placeholder="Where did you hear about us?"
-                                            className="mt-2 w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-base font-normal text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-neutral-900"
-                                        />
-                                    )}
                                 </div>
 
                                 <button

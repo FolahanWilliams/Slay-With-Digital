@@ -19,9 +19,9 @@ CTA so Yetty can talk to the first cohort directly.
   (`src/components/ui/dialog.tsx`). The flow is **email-first**: the email
   is captured and saved immediately (one field, low friction), then the
   success screen offers **optional enrichment** (WhatsApp number,
-  children's ages, top digital concerns, how they heard) alongside the
-  founding-member badge and invite. It remounts on each open (via a
-  `key`) so state resets.
+  children's ages, top digital concerns) alongside the founding-member
+  badge and invite. It remounts on each open (via a `key`) so state
+  resets.
 - The modal posts JSON to the `POST /api/waitlist` route handler
   (`src/app/api/waitlist/route.ts`) — a stable endpoint (not a hashed
   Server Action) so submissions survive redeploys. It validates with the
@@ -169,9 +169,11 @@ cyberpsychology). The waitlist is a **growth + validation engine**:
 
 Keep current, newest first; one line per impactful change or decision.
 
-- 2026-06-16 — "Invite other parents" now shares via WhatsApp (native
-  share → WhatsApp/My status on mobile, WhatsApp Web on desktop); digital
-  concerns gained an "Other" chip and "select all that apply" wording.
+- 2026-06-16 — "Invite other parents" is now a direct WhatsApp share link
+  (wa.me, prefilled with the site URL); removed the "How did you hear
+  about Sav?" question from the enrichment form.
+- 2026-06-16 — Invite shared via WhatsApp; digital concerns gained an
+  "Other" chip and "select all that apply" wording.
 - 2026-06-16 — Enrichment reshaped: phone → **WhatsApp number**, added a
   multi-select **top digital concerns** question (safe `digital_concerns`
   fallback; needs the prod SQL above), removed "Who referred you?". Footer
