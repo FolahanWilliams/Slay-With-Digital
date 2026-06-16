@@ -19,12 +19,11 @@ export const waitlistSchema = z.object({
         .max(200)
         .optional()
         .transform((s) => (s && s.length > 0 ? s : null)),
-    referredBy: z
-        .string()
-        .trim()
-        .max(100)
+    digitalConcerns: z
+        .array(z.string().trim())
+        .max(20)
         .optional()
-        .transform((s) => (s && s.length > 0 ? s : null)),
+        .transform((arr) => arr?.filter((a) => a.length > 0) ?? []),
 });
 
 export type WaitlistInput = z.input<typeof waitlistSchema>;
@@ -34,7 +33,7 @@ export type WaitlistFormState = {
     message?: string;
     fieldErrors?: Partial<
         Record<
-            "email" | "phone" | "childrenAges" | "referralSource" | "referredBy",
+            "email" | "phone" | "childrenAges" | "referralSource" | "digitalConcerns",
             string
         >
     >;

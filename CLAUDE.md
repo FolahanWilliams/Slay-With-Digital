@@ -18,14 +18,15 @@ CTA so Yetty can talk to the first cohort directly.
 - Every "Join the waitlist" CTA opens `WaitlistDialog`
   (`src/components/ui/dialog.tsx`). The flow is **email-first**: the email
   is captured and saved immediately (one field, low friction), then the
-  success screen offers **optional enrichment** (phone, children's ages,
-  how they heard, who referred them) alongside the founding-member badge
-  and invite. It remounts on each open (via a `key`) so state resets.
+  success screen offers **optional enrichment** (WhatsApp number,
+  children's ages, top digital concerns, how they heard) alongside the
+  founding-member badge and invite. It remounts on each open (via a
+  `key`) so state resets.
 - The modal posts JSON to the `POST /api/waitlist` route handler
   (`src/app/api/waitlist/route.ts`) — a stable endpoint (not a hashed
   Server Action) so submissions survive redeploys. It validates with the
   shared zod schema in `src/lib/waitlist.ts` (fields: `email`, `phone`,
-  `childrenAges`, `referralSource`, `referredBy`; plus a `website`
+  `childrenAges`, `referralSource`, `digitalConcerns`; plus a `website`
   honeypot). The first call **inserts** the email into `sav_waitlist`; a
   second `mode: "enrich"` call **updates** that row by email with whatever
   optional fields were provided (never clearing earlier answers), via the
@@ -117,10 +118,10 @@ changes by running `npm run dev` and clicking through.
   use it**. Any schema change to production must be done by the user in
   the Supabase SQL editor — the MCP can't reach `wmuxpcqjhaxbqtphazot`.
 - **Pending prod SQL** (run in the `wmuxpcqjhaxbqtphazot` SQL editor to
-  enable "Who referred you?" capture):
-  `alter table public.sav_waitlist add column if not exists referred_by text;`
-  Until it runs, the API safely drops `referred_by` (retries the enrich
-  without that column), so signups never break.
+  enable the "top digital concerns" capture):
+  `alter table public.sav_waitlist add column if not exists digital_concerns text[];`
+  Until it runs, the API safely drops `digital_concerns` (retries the
+  enrich without that column), so signups never break.
 
 ## Deploy & verify workflow
 
@@ -168,8 +169,11 @@ cyberpsychology). The waitlist is a **growth + validation engine**:
 
 Keep current, newest first; one line per impactful change or decision.
 
-- 2026-06-16 — Added "Who referred you?" optional enrich field + safe
-  `referred_by` fallback in the route (needs the prod SQL above).
+- 2026-06-16 — Enrichment reshaped: phone → **WhatsApp number**, added a
+  multi-select **top digital concerns** question (safe `digital_concerns`
+  fallback; needs the prod SQL above), removed "Who referred you?". Footer
+  **Yetty Williams** link → LinkedIn; removed success-screen WhatsApp chat
+  button.
 - 2026-06-16 — Renamed badge → **Mums Training AI**, invite button →
   **Invite other parents**; spelling moms→mums.
 - 2026-06-16 — Added the **Mums Training AI founding-member badge +
