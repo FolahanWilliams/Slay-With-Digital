@@ -333,9 +333,9 @@ function WaitlistDialog({
                                 You&apos;re in.
                             </DialogTitle>
                             <p className="mx-auto mt-3 max-w-xs leading-relaxed text-neutral-600">
-                                You&apos;re a founding member of our exclusive early-access
-                                club. Bring other parents in, and we&apos;ll shape Sav together on
-                                WhatsApp.
+                                Welcome! You&apos;re a founding member of our exclusive
+                                early-access club. Bring other parents in, as we shape Sav
+                                together.
                             </p>
 
                             <div className="mx-auto mt-6 max-w-[16rem] rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-[1.5px] shadow-lg">
