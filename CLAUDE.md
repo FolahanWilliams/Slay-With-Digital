@@ -169,6 +169,9 @@ cyberpsychology). The waitlist is a **growth + validation engine**:
 
 Keep current, newest first; one line per impactful change or decision.
 
+- 2026-06-16 — Invite share message now leads with the hook "It takes an
+  e-village to raise a child today" (recommended over the "I just
+  joined…" opener) + early-access framing.
 - 2026-06-16 — Post-signup badge no longer shows "Mums Training AI"; now
   reads "Founding member / Early access unlocked / You're in before
   everyone else" (exclusive early-access framing).
