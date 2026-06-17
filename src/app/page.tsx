@@ -325,10 +325,10 @@ function WaitlistDialog({
                                         </span>
                                     </div>
                                     <p className="mt-1.5 font-heading text-xl font-bold tracking-tight text-neutral-900">
-                                        Mums Training AI
+                                        Early access unlocked
                                     </p>
                                     <p className="mt-0.5 text-xs text-neutral-500">
-                                        Exclusive early-access club
+                                        You&apos;re in before everyone else
                                     </p>
                                 </div>
                             </div>
