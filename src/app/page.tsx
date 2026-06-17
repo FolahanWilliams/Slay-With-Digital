@@ -232,7 +232,7 @@ function WaitlistDialog({
     const [enrichPending, setEnrichPending] = useState(false);
     const [enrichSaved, setEnrichSaved] = useState(false);
     const inviteMessage =
-        "I just joined a movement for Parents Training AI, Yetty's exclusive club shaping Sav: a judgement-free parenting coach for the digital age. Come join us 💛";
+        "It takes an e-village to raise a child today. I just got early access to Sav, a judgement-free parenting coach for the digital age, by Yetty Williams. Come join us 💛";
     const whatsappShareHref = `https://wa.me/?text=${encodeURIComponent(
         `${inviteMessage} ${config.siteUrl}`,
     )}`;
