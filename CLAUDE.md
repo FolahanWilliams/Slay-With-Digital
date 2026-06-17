@@ -169,6 +169,9 @@ cyberpsychology). The waitlist is a **growth + validation engine**:
 
 Keep current, newest first; one line per impactful change or decision.
 
+- 2026-06-16 — Post-signup badge no longer shows "Mums Training AI"; now
+  reads "Founding member / Early access unlocked / You're in before
+  everyone else" (exclusive early-access framing).
 - 2026-06-16 — "Invite other parents" is now a direct WhatsApp share link
   (wa.me, prefilled with the site URL); removed the "How did you hear
   about Sav?" question from the enrichment form.
