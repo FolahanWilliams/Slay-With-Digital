@@ -19,8 +19,10 @@ export const config = {
         process.env.NEXT_PUBLIC_SITE_URL ?? "https://slaywithdigital.com",
 
     // The main call to action points at a free audit quiz. Set
-    // NEXT_PUBLIC_QUIZ_URL to your real quiz link (Typeform, ScoreApp, etc.).
-    quizUrl: process.env.NEXT_PUBLIC_QUIZ_URL ?? "https://slaywithdigital.com",
+    // NEXT_PUBLIC_QUIZ_URL to override the hosted quiz link.
+    quizUrl:
+        process.env.NEXT_PUBLIC_QUIZ_URL ??
+        "https://digitalsavvy.getformly.com/swdaudit",
 
     contact: {
         email: "yetty@yettywilliams.com",
