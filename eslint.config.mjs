@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // The standalone duplicate is its own project — lint it from inside sav-clone.
     "sav-clone/**",
+    // Slay with Digital is a separate standalone site — lint it from inside slaywithdigital.
+    "slaywithdigital/**",
   ]),
 ]);
 

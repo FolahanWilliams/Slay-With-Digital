@@ -169,6 +169,15 @@ cyberpsychology). The waitlist is a **growth + validation engine**:
 
 Keep current, newest first; one line per impactful change or decision.
 
+- 2026-06-23 — Added `slaywithdigital/`, a **separate standalone marketing
+  site** for the Slay with Digital consultancy (bold red/black, Next 16,
+  Sora + Inter; brand-first homepage, Yetty in About, interactive 7 C's,
+  CTA links to a free audit quiz via `NEXT_PUBLIC_QUIZ_URL`). Isolated
+  from the Sav build like `sav-clone/` (excluded in root tsconfig +
+  eslint). Meant to move to its own repo (`yweeLM/slaywithdigital`); the
+  GitHub MCP in that session couldn't create repos, so it lives here for
+  now. Build needs `NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1`
+  only in this sandboxed container (Google Fonts TLS); Vercel is fine.
 - 2026-06-16 — Invite share message now leads with the hook "It takes an
   e-village to raise a child today" (recommended over the "I just
   joined…" opener) + early-access framing.
