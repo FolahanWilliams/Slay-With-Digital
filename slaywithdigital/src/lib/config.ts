@@ -90,22 +90,33 @@ export const sevenCs: { letter: string; title: string; copy: string }[] = [
     },
 ];
 
-export const services: { title: string; copy: string }[] = [
+export const services: { title: string; whatYouGet: string; bestFor: string }[] = [
     {
         title: "Consulting",
-        copy: "A bespoke digital media strategy for your business, built with you and ready to run.",
+        whatYouGet:
+            "A fully built digital media strategy: your channels, your content pillars, your content calendar, ready to hand to your team and run.",
+        bestFor:
+            "Businesses that need a clear strategy built for them, not a template to figure out alone.",
     },
     {
         title: "Training",
-        copy: "Practical, hands-on training so your whole team can slay with digital.",
+        whatYouGet:
+            "Hands-on workshops that equip your team with the digital skills to execute your strategy confidently, from content creation to measuring results.",
+        bestFor: "In-house teams who need practical skills, fast.",
     },
     {
         title: "Coaching",
-        copy: "One to one coaching to sharpen your digital presence and your confidence.",
+        whatYouGet:
+            "Regular 1:1 sessions focused on your digital presence, your content, and the decisions keeping you stuck, with accountability built in.",
+        bestFor:
+            "Business owners building their digital brand alongside everything else they are running.",
     },
     {
         title: "Mentoring",
-        copy: "Ongoing guidance that keeps your strategy on track as your business grows.",
+        whatYouGet:
+            "Ongoing strategic support as your business scales, so you are never making digital decisions alone.",
+        bestFor:
+            "Growth-stage businesses navigating new channels, platforms, or markets.",
     },
 ];
 
@@ -113,6 +124,7 @@ export const outcomes: string[] = [
     "A clear digital strategy",
     "A quarterly content calendar",
     "A system that converts followers to customers",
+    "Clarity on which platforms and content types are right for your business",
     "Confidence, without the overwhelm",
 ];
 

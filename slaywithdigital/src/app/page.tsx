@@ -70,8 +70,9 @@ function Hero() {
                     <Reveal delay={120}>
                         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
                             If you are not online, you are not in business. Slay with
-                            Digital gives you a clear plan to show up, stand out, and
-                            turn followers into paying customers. All without the
+                            Digital gives business owners a proven, step-by-step plan
+                            to show up consistently, attract the right audience, and
+                            turn followers into paying customers, without the
                             overwhelm.
                         </p>
                     </Reveal>
@@ -233,15 +234,15 @@ function Problem() {
                 {[
                     {
                         title: "No clear strategy",
-                        copy: "Posting when you remember, with no plan tying it to growth.",
+                        copy: "Posting when you remember. No content plan, no clear message, no link to revenue.",
                     },
                     {
                         title: "Inconsistent presence",
-                        copy: "Showing up in bursts, so your audience never builds trust.",
+                        copy: "Showing up in bursts, then going quiet, so your audience never builds the trust that leads to a sale.",
                     },
                     {
                         title: "Followers that do not convert",
-                        copy: "Plenty of likes, but few of them ever become customers.",
+                        copy: "Plenty of likes and views. But when you look at your sales, digital is not pulling its weight.",
                     },
                 ].map((p, i) => (
                     <Reveal key={p.title} delay={i * 80} className="h-full">
@@ -278,9 +279,11 @@ function Program() {
                     </Reveal>
                     <Reveal delay={120}>
                         <p className="mt-5 text-lg leading-relaxed text-muted">
-                            A simple, repeatable system to plan, create, and convert,
-                            built around seven C&apos;s and tailored to a brand that is
-                            unique and authentic to you.
+                            A proven framework, delivered through consulting,
+                            coaching, or training, that gives you a simple, repeatable
+                            system to plan your content, build your audience, and
+                            convert followers into customers. Tailored entirely to your
+                            brand.
                         </p>
                     </Reveal>
                 </div>
@@ -306,6 +309,18 @@ function Services() {
                             Ways to slay with digital
                         </h2>
                     </Reveal>
+                    <Reveal delay={110}>
+                        <p className="mt-5 text-lg leading-relaxed text-muted">
+                            Not sure which is right for you?{" "}
+                            <a
+                                href={config.quizUrl}
+                                className="font-semibold text-brand underline-offset-4 hover:underline"
+                            >
+                                Take the free audit
+                            </a>{" "}
+                            and I&apos;ll point you in the right direction.
+                        </p>
+                    </Reveal>
                 </div>
 
                 <div className="mt-12 grid gap-4 sm:grid-cols-2">
@@ -320,8 +335,17 @@ function Services() {
                                     <h3 className="mt-5 font-display text-xl font-bold text-ink">
                                         {s.title}
                                     </h3>
-                                    <p className="mt-2 leading-relaxed text-muted">
-                                        {s.copy}
+                                    <p className="mt-3 text-sm leading-relaxed text-muted">
+                                        <span className="font-semibold text-ink">
+                                            What you get:
+                                        </span>{" "}
+                                        {s.whatYouGet}
+                                    </p>
+                                    <p className="mt-2 text-sm leading-relaxed text-muted">
+                                        <span className="font-semibold text-ink">
+                                            Best for:
+                                        </span>{" "}
+                                        {s.bestFor}
                                     </p>
                                 </div>
                             </Reveal>
@@ -345,16 +369,15 @@ function Results() {
                     </Reveal>
                     <Reveal delay={60}>
                         <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                            How can you slay with digital?
+                            Here is what you walk away with.
                         </h2>
                     </Reveal>
                     <Reveal delay={120}>
                         <p className="mt-5 text-lg leading-relaxed text-white/70">
-                            You need an online strategy, and the skills to implement and
-                            measure success. Slay with Digital walks you through a unique
-                            7 C&apos;s plan to succeed online, convert your followers to
-                            paying customers, and grow exponentially. All without
-                            overwhelm.
+                            Whether we work together through consulting, coaching, or
+                            training, every engagement is built around the 7 C&apos;s
+                            framework, giving you the strategy, the system, and the
+                            skills to grow your business online with confidence.
                         </p>
                     </Reveal>
                 </div>
@@ -453,10 +476,10 @@ function About() {
                                 corporations drive their business growth.
                             </p>
                             <p>
-                                As lead consultant she offers fractional services, has
-                                successfully built a brand that reaches millions every
-                                year, and is the founder of the 7 C&apos;s to Slay with
-                                Digital and AI framework.
+                                As lead consultant she is available for project-based
+                                and retained engagements, has successfully built a brand
+                                that reaches millions every year, and is the founder of
+                                the 7 C&apos;s to Slay with Digital and AI framework.
                             </p>
                         </div>
                     </Reveal>
@@ -519,8 +542,9 @@ function FinalCta() {
                             Get your free Digital Media Marketing audit.
                         </h2>
                         <p className="mx-auto mt-5 max-w-xl text-lg text-white/85">
-                            Take the 2-minute quiz for a snapshot of where your business
-                            stands online, and exactly what to fix first.
+                            Take the 2-minute quiz. Get a personalised snapshot of where
+                            your business stands online, what to fix first, and which
+                            service is the right next step for you.
                         </p>
                         <a
                             href={config.quizUrl}
