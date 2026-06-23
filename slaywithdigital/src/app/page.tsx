@@ -96,9 +96,9 @@ function Hero() {
                         <p className="mt-8 text-sm text-muted">
                             Strategy shaped alongside teams at{" "}
                             <span className="font-semibold text-ink">Google</span>,{" "}
-                            <span className="font-semibold text-ink">JPMorgan</span>,{" "}
-                            <span className="font-semibold text-ink">PwC</span> and{" "}
-                            <span className="font-semibold text-ink">MTN</span>.
+                            <span className="font-semibold text-ink">Bloomberg</span>,{" "}
+                            <span className="font-semibold text-ink">JPMorgan</span> and{" "}
+                            <span className="font-semibold text-ink">PwC</span>.
                         </p>
                     </Reveal>
                 </div>
@@ -187,7 +187,7 @@ function Marquee() {
     return (
         <section className="border-y border-line bg-cream py-7">
             <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                Spoken to &amp; consulted for
+                Worked at &amp; consulted with
             </p>
             <div className="group/marquee relative overflow-hidden">
                 <div className="flex w-max animate-marquee items-center gap-12 pr-12">
@@ -444,13 +444,21 @@ function About() {
                         </h2>
                     </Reveal>
                     <Reveal delay={120}>
-                        <p className="mt-5 text-lg leading-relaxed text-muted">
-                            Slay with Digital is led by Yetty Williams, founder of
-                            LagosMums and a digital media strategist with over 20 years
-                            of internationally relevant experience growing brands and
-                            audiences online. She has spoken and consulted for Google,
-                            JPMorgan, PwC, Lagos Business School and more.
-                        </p>
+                        <div className="mt-5 space-y-4 text-lg leading-relaxed text-muted">
+                            <p>
+                                Slay with Digital is led by Yetty Williams, a digital
+                                media marketing strategist with over 20 years of
+                                internationally relevant experience growing brands,
+                                managing stakeholders, and helping small and large
+                                corporations drive their business growth.
+                            </p>
+                            <p>
+                                As lead consultant she offers fractional services, has
+                                successfully built a brand that reaches millions every
+                                year, and is the founder of the 7 C&apos;s to Slay with
+                                Digital and AI framework.
+                            </p>
+                        </div>
                     </Reveal>
                     <Reveal delay={180}>
                         <ul className="mt-6 flex flex-wrap gap-2.5">
@@ -573,14 +581,6 @@ function Footer() {
                                         href={config.social.linkedin}
                                     >
                                         LinkedIn
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        className="hover:text-brand"
-                                        href={config.social.lagosMums}
-                                    >
-                                        LagosMums
                                     </a>
                                 </li>
                             </ul>

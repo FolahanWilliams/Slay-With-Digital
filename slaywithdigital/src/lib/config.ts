@@ -32,7 +32,6 @@ export const config = {
     social: {
         instagram: "https://instagram.com/slaywithdigital",
         linkedin: "https://www.linkedin.com/in/yettywilliams",
-        lagosMums: "https://lagosmums.com",
     },
 
     founder: {
@@ -41,20 +40,15 @@ export const config = {
     },
 } as const;
 
-/** Brands Slay with Digital has spoken to or consulted for. Shown in the marquee. */
+/** Companies Yetty has worked at or consulted with. Shown in the marquee. */
 export const companies: string[] = [
     "Google",
+    "Bloomberg",
     "JPMorgan",
-    "Visa",
+    "Wachovia Bank (now Wells Fargo Bank UK)",
     "PwC",
-    "BBC Radio",
-    "Lagos Business School",
-    "MTN",
-    "AXA Mansard",
-    "Old Mutual",
-    "Union Bank",
-    "Sterling Bank",
-    "BellaNaija",
+    "Nestlé",
+    "Procter & Gamble",
 ];
 
 /** The signature framework. The interactive grid renders these in order. */
@@ -138,9 +132,11 @@ export const testimonials: { quote: string; name: string }[] = [
 ];
 
 export const credentials: string[] = [
-    "Forbes Over 50 honoree",
-    "Yale MBA, Finance & Strategy",
-    "Cambridge, Strategic Digital Media Marketing",
-    "Accredited Coach, EMCC",
-    "Author, Digital Savvy Parenting",
+    "Forbes Over 30 Under 50",
+    "MBA, Yale School of Management",
+    "Strategic Digital Media Marketing, University of Cambridge",
+    "Trained in cyberpsychology",
+    "Accredited coach & mentor, EMCC",
+    "Business mentor, Help to Grow (UK Gov)",
+    "Advisory board, Good Future Foundation UK",
 ];
