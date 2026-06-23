@@ -126,8 +126,8 @@ export const testimonials: { quote: string; name: string }[] = [
         name: "Funke Giwa",
     },
     {
-        quote: "Your session was electrifying and fascinating. Thank you so much for that. The institute appreciates you.",
-        name: "Family Systems Engineering Institute",
+        quote: "I chose to continue our mentorship because I felt that you offered me the right support. I was so happy with what you offered me during our time together on the Help to Grow program. What I particularly like about your approach to mentoring is that you are incredibly supportive, and I love the personal touch you bring. I would absolutely recommend you to anybody who is looking to scale their business.",
+        name: "Jemima, Help to Grow Program Participant",
     },
 ];
 

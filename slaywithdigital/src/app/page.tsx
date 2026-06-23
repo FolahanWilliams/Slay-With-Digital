@@ -417,9 +417,9 @@ function Testimonials() {
 function About() {
     return (
         <section id="about" className="scroll-mt-20 bg-cream py-20 sm:py-28">
-            <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 sm:px-8 md:grid-cols-[0.8fr_1.2fr] md:gap-14">
+            <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 sm:px-8 md:grid-cols-[0.6fr_1.4fr] md:gap-14">
                 <Reveal>
-                    <div className="relative mx-auto w-full max-w-xs">
+                    <div className="relative mx-auto w-full max-w-[220px]">
                         <div
                             aria-hidden
                             className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-3xl bg-brand/15"
