@@ -481,15 +481,15 @@ function About() {
                                 <Image
                                     src="/badge-ai-business-mentors.png"
                                     alt="AI for Business Mentors, ILM Assured"
-                                    width={150}
-                                    height={161}
+                                    width={400}
+                                    height={400}
                                     className="h-20 w-auto"
                                 />
                                 <Image
                                     src="/badge-emcc-eia.png"
                                     alt="EMCC Global Individual Accreditation, EIA Practitioner"
-                                    width={210}
-                                    height={119}
+                                    width={529}
+                                    height={306}
                                     className="h-16 w-auto"
                                 />
                             </div>
