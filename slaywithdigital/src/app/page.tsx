@@ -472,6 +472,29 @@ function About() {
                             ))}
                         </ul>
                     </Reveal>
+                    <Reveal delay={240}>
+                        <div className="mt-7">
+                            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+                                Accredited &amp; assured
+                            </p>
+                            <div className="mt-3 flex flex-wrap items-center gap-5">
+                                <Image
+                                    src="/badge-ai-business-mentors.png"
+                                    alt="AI for Business Mentors, ILM Assured"
+                                    width={150}
+                                    height={161}
+                                    className="h-20 w-auto"
+                                />
+                                <Image
+                                    src="/badge-emcc-eia.png"
+                                    alt="EMCC Global Individual Accreditation, EIA Practitioner"
+                                    width={210}
+                                    height={119}
+                                    className="h-16 w-auto"
+                                />
+                            </div>
+                        </div>
+                    </Reveal>
                 </div>
             </div>
         </section>
