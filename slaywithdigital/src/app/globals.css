@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-sora), var(--font-inter), sans-serif;
+
+    --color-ink: #0b0b0c;
+    --color-paper: #ffffff;
+    --color-cream: #faf7f4;
+    --color-brand: #e11d2e;
+    --color-brand-dark: #c2121f;
+    --color-brand-soft: #fdeaec;
+
+    --color-muted: #57534e;
+    --color-line: #ece9e4;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 6rem;
+    }
+
+    body {
+        background-color: var(--color-paper);
+        color: var(--color-ink);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background-color: var(--color-brand);
+        color: #fff;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-brand);
+        outline-offset: 2px;
+    }
+}
+
+/* Scroll-reveal: hidden until the Reveal component marks it visible. */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+        opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Continuous logo marquee. */
+@keyframes swd-marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-marquee {
+    animation: swd-marquee 38s linear infinite;
+}
+
+.group\/marquee:hover .animate-marquee {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .animate-marquee {
+        animation: none;
+    }
+}
