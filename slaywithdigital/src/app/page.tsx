@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
     ArrowRight,
     Check,
@@ -37,6 +38,7 @@ export default function Home() {
                 <Results />
                 <Testimonials />
                 <FinalCta />
+                <TrustStrip />
             </main>
             <Footer />
         </div>
@@ -463,6 +465,36 @@ function FinalCta() {
                             Start the free audit
                             <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                         </a>
+                    </div>
+                </div>
+            </Reveal>
+        </section>
+    );
+}
+
+function TrustStrip() {
+    return (
+        <section className="border-t border-line bg-cream py-10">
+            <Reveal>
+                <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 sm:flex-row sm:justify-center sm:gap-8 sm:px-8">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+                        Accredited &amp; assured
+                    </p>
+                    <div className="flex items-center gap-6">
+                        <Image
+                            src="/badge-ai-business-mentors.png"
+                            alt="AI for Business Mentors, ILM Assured"
+                            width={400}
+                            height={400}
+                            className="h-14 w-auto"
+                        />
+                        <Image
+                            src="/badge-emcc-eia.png"
+                            alt="EMCC Global Individual Accreditation, EIA Practitioner"
+                            width={529}
+                            height={306}
+                            className="h-11 w-auto"
+                        />
                     </div>
                 </div>
             </Reveal>
