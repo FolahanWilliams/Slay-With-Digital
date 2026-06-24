@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
     ArrowRight,
     Check,
@@ -17,7 +16,6 @@ import {
     services,
     outcomes,
     testimonials,
-    credentials,
 } from "@/lib/config";
 import { Nav } from "@/components/site/nav";
 import { Logo } from "@/components/site/logo";
@@ -38,7 +36,6 @@ export default function Home() {
                 <Services />
                 <Results />
                 <Testimonials />
-                <About />
                 <FinalCta />
             </main>
             <Footer />
@@ -437,93 +434,6 @@ function Testimonials() {
     );
 }
 
-function About() {
-    return (
-        <section id="about" className="scroll-mt-20 bg-cream py-20 sm:py-28">
-            <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 sm:px-8 md:grid-cols-[0.6fr_1.4fr] md:gap-14">
-                <Reveal>
-                    <div className="relative mx-auto w-full max-w-[220px]">
-                        <div
-                            aria-hidden
-                            className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-3xl bg-brand/15"
-                        />
-                        <Image
-                            src={config.founder.photo}
-                            alt={config.founder.name}
-                            width={560}
-                            height={666}
-                            className="w-full rounded-3xl border border-line object-cover"
-                        />
-                    </div>
-                </Reveal>
-
-                <div>
-                    <Reveal>
-                        <SectionEyebrow>Behind the brand</SectionEyebrow>
-                    </Reveal>
-                    <Reveal delay={60}>
-                        <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-                            Led by Yetty Williams
-                        </h2>
-                    </Reveal>
-                    <Reveal delay={120}>
-                        <div className="mt-5 space-y-4 text-lg leading-relaxed text-muted">
-                            <p>
-                                Slay with Digital is led by Yetty Williams, a digital
-                                media marketing strategist with over 20 years of
-                                internationally relevant experience growing brands,
-                                managing stakeholders, and helping small and large
-                                corporations drive their business growth.
-                            </p>
-                            <p>
-                                As lead consultant she is available for project-based
-                                and retained engagements, has successfully built a brand
-                                that reaches millions every year, and is the founder of
-                                the 7 C&apos;s to Slay with Digital and AI framework.
-                            </p>
-                        </div>
-                    </Reveal>
-                    <Reveal delay={180}>
-                        <ul className="mt-6 flex flex-wrap gap-2.5">
-                            {credentials.map((c) => (
-                                <li
-                                    key={c}
-                                    className="rounded-full border border-line bg-paper px-3.5 py-1.5 text-sm font-medium text-ink"
-                                >
-                                    {c}
-                                </li>
-                            ))}
-                        </ul>
-                    </Reveal>
-                    <Reveal delay={240}>
-                        <div className="mt-7">
-                            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-                                Accredited &amp; assured
-                            </p>
-                            <div className="mt-3 flex flex-wrap items-center gap-5">
-                                <Image
-                                    src="/badge-ai-business-mentors.png"
-                                    alt="AI for Business Mentors, ILM Assured"
-                                    width={400}
-                                    height={400}
-                                    className="h-20 w-auto"
-                                />
-                                <Image
-                                    src="/badge-emcc-eia.png"
-                                    alt="EMCC Global Individual Accreditation, EIA Practitioner"
-                                    width={529}
-                                    height={306}
-                                    className="h-16 w-auto"
-                                />
-                            </div>
-                        </div>
-                    </Reveal>
-                </div>
-            </div>
-        </section>
-    );
-}
-
 function FinalCta() {
     return (
         <section className="px-5 py-20 sm:px-8 sm:py-28">
@@ -587,11 +497,6 @@ function Footer() {
                                 <li>
                                     <a className="hover:text-brand" href="#services">
                                         Services
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="hover:text-brand" href="#about">
-                                        About
                                     </a>
                                 </li>
                                 <li>
