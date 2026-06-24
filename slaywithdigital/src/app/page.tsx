@@ -554,14 +554,6 @@ function Footer() {
                                 <li>
                                     <a
                                         className="hover:text-brand"
-                                        href={config.social.instagram}
-                                    >
-                                        Instagram
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        className="hover:text-brand"
                                         href={config.social.linkedin}
                                     >
                                         LinkedIn

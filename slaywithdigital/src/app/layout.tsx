@@ -80,7 +80,7 @@ export default function RootLayout({
             name: config.founder.name,
             sameAs: config.social.linkedin,
         },
-        sameAs: [config.social.instagram, config.social.linkedin],
+        sameAs: [config.social.linkedin],
     };
 
     return (

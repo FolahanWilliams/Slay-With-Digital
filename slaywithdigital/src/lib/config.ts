@@ -30,7 +30,6 @@ export const config = {
     },
 
     social: {
-        instagram: "https://instagram.com/slaywithdigital",
         linkedin: "https://www.linkedin.com/in/yettywilliams",
     },
 
