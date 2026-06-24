@@ -25,7 +25,7 @@ export const config = {
         "https://digitalsavvy.getformly.com/swdaudit",
 
     contact: {
-        email: "yetty@SlaywithDigital.com",
+        email: "hello@SlaywithDigital.com",
         phone: "+44 7787 525 391",
     },
 
